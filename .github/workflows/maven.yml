@@ -10,7 +10,7 @@ name: Inventory CI with Maven
 
 on:
   push:
-    branches: [ "master","2-implement-commit-stage-of-the-cicd" ]
+    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -35,7 +36,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
 
     steps:
     - uses: actions/checkout@v4
