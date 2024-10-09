@@ -10,7 +10,7 @@ name: Inventory CI with Maven
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master","2-implement-commit-stage-of-the-cicd" ]
   pull_request:
     branches: [ "master" ]
 
@@ -29,13 +29,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Unittest Maven
-        run: mvn test
+        run: mvn clean -Dtest=com.stores.Inventory.Unittest.*Tests test
 
     
   
   build:
 
     runs-on: ubuntu-latest
+    
 
     steps:
     - uses: actions/checkout@v4
