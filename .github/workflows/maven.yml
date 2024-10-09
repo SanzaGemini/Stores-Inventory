@@ -10,7 +10,7 @@ name: Inventory CI with Maven
 
 on:
   push:
-    branches: [ "master","2-implement-commit-stage-of-the-cicd" ]
+    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
