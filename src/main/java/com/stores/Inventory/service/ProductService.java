@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.stores.Inventory.entity.Product;
+import com.stores.Inventory.model.Product;
+import com.stores.Inventory.model.ProductDTO;
 import com.stores.Inventory.repository.ProductRepository;
 @Service
 public class ProductService {
@@ -17,9 +18,8 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<Product> save(){
-        Product product = new Product("car","BMW",(float) 10000.0,2);
-        productRepository.save(product);
+    public List<Product> save(ProductDTO productDTO){
+        productRepository.save(productDTO.toProduct());
         return findAllProducts();
     }
     

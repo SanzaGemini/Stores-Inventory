@@ -4,10 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stores.Inventory.entity.Product;
+import com.stores.Inventory.model.*;
 import com.stores.Inventory.service.ProductService;
 
 @RestController
@@ -18,8 +19,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/products")
-    public List<Product> AddProduct(){
-        return productService.save();
+    public List<Product> AddProduct(@RequestBody ProductDTO productDTO){
+        return productService.save(productDTO);
     }
     
 }
