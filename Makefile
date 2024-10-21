@@ -3,4 +3,5 @@ run_unittest:
 
 run_acceptance_test:
 	- 	- mvn clean -Dtest=com.stores.Inventory.AcceptanceTests.*Tests test
+	
 

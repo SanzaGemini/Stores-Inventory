@@ -3,6 +3,7 @@ package com.stores.Inventory.Unittest;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,15 +30,31 @@ public class ProductServiceTests {
 
     private Product product;
 
+    private List<Product> productList;
+
     @BeforeEach
     public void init() {
         MockitoAnnotations.openMocks(this);
         
         // Create a Product instance to be returned by productDTO.toProduct()
         product = new Product("car", "BMW", (float) 10000.0, 2);
+        productList = new ArrayList<Product>();
+        productList.add(product);
         
         // Mock the behavior of productDTO.toProduct() to return the Product object
         when(productDTO.toProduct()).thenReturn(product);
+        
+    }
+
+    @Test
+    void GetAllProducts(){
+        when(productRepository.findAll()).thenReturn(productList);
+
+        List<Product> pList = productService.findAllProducts();
+
+        verify(productRepository, times(1)).findAll();
+
+        assertNotNull(pList);
     }
 
     @Test
