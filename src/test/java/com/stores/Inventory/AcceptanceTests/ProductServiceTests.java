@@ -1,4 +1,4 @@
-package com.stores.Inventory.Unittest;
+package com.stores.Inventory.AcceptanceTests;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -11,12 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.stores.Inventory.model.Product;
 import com.stores.Inventory.model.ProductDTO;
 import com.stores.Inventory.repository.ProductRepository;
 import com.stores.Inventory.service.ProductService;
 
+@SpringBootTest
 public class ProductServiceTests {
 
     @InjectMocks
@@ -25,12 +27,9 @@ public class ProductServiceTests {
     @Mock
     private ProductRepository productRepository;
 
-    @Mock
-    private ProductDTO productDTO;
-
-    private Product product;
-
     private List<Product> productList;
+    private Product product;
+    private ProductDTO productDTO;
 
     @BeforeEach
     public void init() {
