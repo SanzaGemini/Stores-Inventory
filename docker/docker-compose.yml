@@ -9,7 +9,7 @@ services:
       MYSQL_PASSWORD: 'new_password'
       MYSQL_ROOT_PASSWORD: 'new_password'
     ports:
-      - '3307:3306'  # Expose MySQL port
+      - '3306:3306'  # Expose MySQL port
     expose:
       - '3306'
     volumes:
