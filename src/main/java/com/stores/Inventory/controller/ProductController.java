@@ -2,6 +2,8 @@ package com.stores.Inventory.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +30,10 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<List<Product>> addProduct(@RequestBody ProductDTO productDTO){
-        List<Product> newProduct = productService.save(productDTO);
-        return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
+
+    @PostMapping("/product")
+    public List<Product> AddProduct(@Valid @RequestBody ProductDTO productDTO){
+        return productService.save(productDTO);
     }
     
 }

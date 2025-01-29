@@ -42,7 +42,7 @@ class InventoryApplicationTests {
     public void setUp() {
         Product product = new Product();
         product.setName("Test Product");
-        product.setPrice((float)100.0);
+        product.setPrice((Double)100.0);
         product.setQuantity(10);
 
         productRepository.save(product);

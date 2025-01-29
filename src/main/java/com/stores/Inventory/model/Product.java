@@ -6,76 +6,158 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
+/**
+ * Represents a product entity.
+ */
 @Entity
 @Table(name = "Products")
 public class Product {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "Name")
+    @NotBlank(message = "Name is required!")
+    @Size(min = 2, message = "Name should be more than 2 characters long!")
     private String name;
 
     @Column(name = "Description")
+    @NotBlank(message = "Description is required!")
+    @Size(min = 5, message = "Description should be more than 5 characters long!")
     private String description;
 
     @Column(name = "Price")
-    private float price;
+    @NotNull(message = "Price is required!")
+    private Double price;
 
-    @Column(name = "Quanity")
-    private int quantity;   
-    
-    public Product(){
+    @Column(name = "Quantity")
+    @NotNull(message = "Quantity is required!")
+    private Integer quantity;
 
+    /**
+     * Default constructor for Product.
+     */
+    public Product() {
     }
 
-    public Product(String name, String description,float price,int quantity){
-        super();
+    /**
+     * Parameterized constructor for Product.
+     *
+     * @param name        the name of the product
+     * @param description the description of the product
+     * @param price       the price of the product
+     * @param quantity    the quantity of the product
+     */
+    public Product(String name, String description, Double price, Integer quantity) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
     }
 
+    /**
+     * Get the product ID.
+     *
+     * @return the product ID
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * Set the product ID.
+     *
+     * @param id the product ID
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * Get the product name.
+     *
+     * @return the product name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Set the product name.
+     *
+     * @param name the product name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Get the product description.
+     *
+     * @return the product description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Set the product description.
+     *
+     * @param description the product description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public float getPrice() {
+    /**
+     * Get the product price.
+     *
+     * @return the product price
+     */
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    /**
+     * Set the product price.
+     *
+     * @param price the product price
+     */
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public int getQuantity() {
+    /**
+     * Get the product quantity.
+     *
+     * @return the product quantity
+     */
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    /**
+     * Set the product quantity.
+     *
+     * @param quantity the product quantity
+     */
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    /**
+     * Returns a string representation of the product in the format:
+     * Name - Description - Price
+     * 
+     * @return a formatted string with the product details
+     */
+    @Override
+    public String toString() {
+        return name + " - " + description + " - " + price;
     }
 }
