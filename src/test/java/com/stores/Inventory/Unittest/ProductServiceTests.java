@@ -37,7 +37,7 @@ public class ProductServiceTests {
         MockitoAnnotations.openMocks(this);
         
         // Create a Product instance to be returned by productDTO.toProduct()
-        product = new Product("car", "BMW", (float) 10000.0, 2);
+        product = new Product("car", "BMW", (Double) 10000.0, 2);
         productList = new ArrayList<Product>();
         productList.add(product);
         

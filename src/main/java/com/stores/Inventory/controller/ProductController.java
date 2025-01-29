@@ -2,6 +2,8 @@ package com.stores.Inventory.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +28,7 @@ public class ProductController {
 
 
     @PostMapping("/product")
-    public List<Product> AddProduct(@RequestBody ProductDTO productDTO){
+    public List<Product> AddProduct(@Valid @RequestBody ProductDTO productDTO){
         return productService.save(productDTO);
     }
     
