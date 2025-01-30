@@ -74,8 +74,9 @@ public class Product {
      *
      * @param id the product ID
      */
-    public void setId(long id) {
+    public Product setId(long id) {
         this.id = id;
+        return this;
     }
 
     /**
@@ -92,8 +93,9 @@ public class Product {
      *
      * @param name the product name
      */
-    public void setName(String name) {
+    public Product setName(String name) {
         this.name = name;
+        return this;
     }
 
     /**
@@ -110,8 +112,9 @@ public class Product {
      *
      * @param description the product description
      */
-    public void setDescription(String description) {
+    public Product setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     /**
@@ -128,8 +131,9 @@ public class Product {
      *
      * @param price the product price
      */
-    public void setPrice(Double price) {
+    public Product setPrice(Double price) {
         this.price = price;
+        return this;
     }
 
     /**
@@ -146,8 +150,9 @@ public class Product {
      *
      * @param quantity the product quantity
      */
-    public void setQuantity(Integer quantity) {
+    public Product setQuantity(Integer quantity) {
         this.quantity = quantity;
+        return this;
     }
 
     /**
