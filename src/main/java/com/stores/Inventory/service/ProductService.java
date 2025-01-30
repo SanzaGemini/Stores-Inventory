@@ -18,9 +18,10 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<Product> save(ProductDTO productDTO){
-        productRepository.save(productDTO.toProduct());
-        return findAllProducts();
+    public Product save(ProductDTO productDTO){
+        Product product = productRepository.save(productDTO.toProduct());
+        System.out.println(product.toString());
+        return product;
     }
     
 }

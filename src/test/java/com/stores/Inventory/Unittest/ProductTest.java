@@ -39,11 +39,13 @@ public class ProductTest {
      */
     @Test
     public void testSetters() {
+        product.setId(1L);
         product.setName("Smartphone");
         product.setDescription("A modern smartphone");
         product.setPrice(499.99);
         product.setQuantity(20);
 
+        assertEquals(1L, product.getId());
         assertEquals("Smartphone", product.getName());
         assertEquals("A modern smartphone", product.getDescription());
         assertEquals(499.99, product.getPrice());

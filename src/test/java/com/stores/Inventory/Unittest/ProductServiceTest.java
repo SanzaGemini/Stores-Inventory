@@ -63,7 +63,7 @@ public class ProductServiceTest {
         when(productRepository.save(product)).thenReturn(product);
         
         // Call the save method in ProductService and pass the mocked productDTO
-        List<Product> products = productService.save(productDTO);
+        Product products = productService.save(productDTO);
 
         // Verify that the repository's save method was called
         verify(productRepository, times(1)).save(product);
