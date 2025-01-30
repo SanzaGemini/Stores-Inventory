@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Unit tests for the Product class.
  */
-public class ProductTests {
+public class ProductTest {
 
     private Product product;
 

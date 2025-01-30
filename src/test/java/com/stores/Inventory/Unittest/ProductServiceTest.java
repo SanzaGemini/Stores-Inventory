@@ -17,7 +17,7 @@ import com.stores.Inventory.model.ProductDTO;
 import com.stores.Inventory.repository.ProductRepository;
 import com.stores.Inventory.service.ProductService;
 
-public class ProductServiceTests {
+public class ProductServiceTest {
 
     @InjectMocks
     private ProductService productService;

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Unit tests for the ProductDTO class.
  */
-public class ProductDTOTests {
+public class ProductDTOTest {
 
     private ProductDTO productDTO;
 
