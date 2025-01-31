@@ -52,7 +52,7 @@ jobs:
             sleep 2
           done
       - name: Unittest Maven
-        run: mvn clean -Dtest=com.stores.Inventory.Unittest.*Tests test
+        run: mvn clean -Dtest=com.stores.Inventory.Unittest.*Test test
 
   build:
     runs-on: ubuntu-latest
