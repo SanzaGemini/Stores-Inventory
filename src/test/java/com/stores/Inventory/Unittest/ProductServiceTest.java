@@ -1,16 +1,20 @@
 package com.stores.Inventory.Unittest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.context.event.annotation.PrepareTestInstance;
 
 import com.stores.Inventory.model.Product;
 import com.stores.Inventory.model.ProductDTO;
@@ -71,4 +75,29 @@ public class ProductServiceTest {
         // Verify that the product list is not null
         assertNotNull(products);
     }
+
+    @Test
+    public void deleteProduct(){
+        
+        when(productRepository.findById(0L)).thenReturn(Optional.of(product));
+
+        String message = productService.delete(0L);
+        
+        verify(productRepository, times(1)).delete(product);
+
+        assertEquals(message, "The product was successfully Deleted.");
+    }
+
+    @Test
+    public void deleteProductThatDoesNotExist(){
+        
+        when(productRepository.findById(0L)).thenReturn(Optional.empty());
+
+        String message = productService.delete(0L);
+        
+        verify(productRepository, times(0)).delete(product);
+
+        assertEquals("Can Not Delete None Existing Product.",message );
+    }
+
 }
