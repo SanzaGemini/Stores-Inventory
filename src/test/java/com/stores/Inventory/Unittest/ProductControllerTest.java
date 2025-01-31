@@ -3,18 +3,18 @@ package com.stores.Inventory.Unittest;
 import com.stores.Inventory.controller.ProductController;
 import com.stores.Inventory.model.Product;
 import com.stores.Inventory.model.ProductDTO;
+import com.stores.Inventory.repository.ProductRepository;
 import com.stores.Inventory.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductControllerTest {
 
@@ -29,6 +30,9 @@ public class ProductControllerTest {
 
     @Mock
     private ProductService productService;
+
+    @Mock
+    private ProductRepository productRepository;
 
     @InjectMocks
     private ProductController productController;
@@ -89,5 +93,34 @@ public class ProductControllerTest {
 
         // Verify the mock service method was called once
         verify(productService, times(1)).save(any(ProductDTO.class));
+    }
+
+    @Test
+    public void testDeleteProduct() throws Exception{
+
+        when(productService.delete(0L)).thenReturn(true);
+
+        mockMvc.perform(delete("/api/v1/{id}", 0L))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.status").value("success"))
+            .andExpect(jsonPath("$.message").value("Request was successful"))
+            .andExpect(jsonPath("$.data").value("The product was successfully Deleted."));
+
+            verify(productService, times(1)).delete(any(Long.class));
+    }
+
+    @Test
+    public void testDeleteProductThatDoesNotExist() throws Exception{
+
+        when(productRepository.findById(1L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(delete("/api/v1/{id}", 1L))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.status").value("failed"))
+            .andExpect(jsonPath("$.message").value("Can Not Delete None Existing Product."));
+
+            verify(productService, times(1)).delete(any(Long.class));
     }
 }

@@ -1,16 +1,21 @@
 package com.stores.Inventory.Unittest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 
 import com.stores.Inventory.model.Product;
 import com.stores.Inventory.model.ProductDTO;
@@ -71,4 +76,29 @@ public class ProductServiceTest {
         // Verify that the product list is not null
         assertNotNull(products);
     }
+
+    @Test
+    public void deleteProduct(){
+        
+        when(productRepository.findById(0L)).thenReturn(Optional.of(product));
+
+        Boolean message = productService.delete(0L);
+        
+        verify(productRepository, times(1)).delete(product);
+
+        assertTrue(message);
+    }
+
+    @Test
+    public void deleteProductThatDoesNotExist(){
+        
+        when(productRepository.findById(0L)).thenReturn(Optional.empty());
+
+        Boolean message = productService.delete(0L);
+        
+        verify(productRepository, times(0)).delete(product);
+
+        assertFalse(message );
+    }
+
 }

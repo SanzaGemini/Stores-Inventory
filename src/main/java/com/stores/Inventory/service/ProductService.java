@@ -1,6 +1,7 @@
 package com.stores.Inventory.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,17 @@ public class ProductService {
         System.out.println(product.toString());
         return product;
     }
+
+    public Boolean delete(long l) {
+        Optional<Product> product = productRepository.findById(l);
+        if(product.isPresent()){
+            productRepository.delete(product.get());
+            return true;
+        }
+
+        return false;
+    }
+
+
     
 }
