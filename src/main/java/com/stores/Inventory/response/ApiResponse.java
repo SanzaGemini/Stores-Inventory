@@ -2,12 +2,17 @@ package com.stores.Inventory.response;
 
 import java.util.Map;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * A generic API response class to standardize the structure of API responses.
  * It supports success, error, and failure scenarios.
  *
  * @param <T> The type of data being returned in the response.
  */
+@Getter
+@Setter
 public class ApiResponse<T> {
 
     private String status;  // Status of the response (e.g., success, error, failed)
@@ -33,30 +38,6 @@ public class ApiResponse<T> {
         this.data = data;
     }
 
-    // Getters and setters for the fields
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
 
     // Static method for a successful response
     public static <T> ApiResponse<T> success(T data) {
