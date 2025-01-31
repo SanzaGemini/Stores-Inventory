@@ -25,14 +25,14 @@ public class ProductService {
         return product;
     }
 
-    public String delete(long l) {
+    public Boolean delete(long l) {
         Optional<Product> product = productRepository.findById(l);
         if(product.isPresent()){
             productRepository.delete(product.get());
-            return "The product was successfully Deleted.";
+            return true;
         }
 
-        return "Can Not Delete None Existing Product.";
+        return false;
     }
 
 

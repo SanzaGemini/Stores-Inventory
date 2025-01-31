@@ -1,9 +1,10 @@
 package com.stores.Inventory.Unittest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.event.annotation.PrepareTestInstance;
+
 
 import com.stores.Inventory.model.Product;
 import com.stores.Inventory.model.ProductDTO;
@@ -81,11 +82,11 @@ public class ProductServiceTest {
         
         when(productRepository.findById(0L)).thenReturn(Optional.of(product));
 
-        String message = productService.delete(0L);
+        Boolean message = productService.delete(0L);
         
         verify(productRepository, times(1)).delete(product);
 
-        assertEquals(message, "The product was successfully Deleted.");
+        assertTrue(message);
     }
 
     @Test
@@ -93,11 +94,11 @@ public class ProductServiceTest {
         
         when(productRepository.findById(0L)).thenReturn(Optional.empty());
 
-        String message = productService.delete(0L);
+        Boolean message = productService.delete(0L);
         
         verify(productRepository, times(0)).delete(product);
 
-        assertEquals("Can Not Delete None Existing Product.",message );
+        assertFalse(message );
     }
 
 }
