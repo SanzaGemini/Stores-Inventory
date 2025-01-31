@@ -30,8 +30,8 @@ public class ProductController {
 
     @PostMapping("/product")
     public ResponseEntity<ApiResponse<Object>> AddProduct(@Valid @RequestBody ProductDTO productDTO){
-        ResponseEntity<ApiResponse<Object>> reb= new ResponseEntity<>(ApiResponse.success(productService.save(productDTO)), HttpStatus.OK);
-        return reb;
+         Product product = productService.save(productDTO);
+        return new ResponseEntity<>(ApiResponse.success(product), HttpStatus.OK);
     }
     
 }

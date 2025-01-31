@@ -18,6 +18,7 @@ public class ApiResponse<T> {
     public ApiResponse() {}
 
     // Constructor for error responses with error messages
+    @SuppressWarnings("unchecked")
     public ApiResponse(String status, Map<String,String> errorMessages) {
         this.status = status;              // e.g., "error"
         this.message = "There was an error processing the request";  // or a more specific message

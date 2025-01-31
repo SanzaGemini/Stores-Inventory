@@ -11,8 +11,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -60,25 +62,32 @@ public class ProductControllerTest {
         verify(productService, times(1)).findAllProducts();
     }
 
+    
     @Test
-    public void testAddProduct() throws Exception {
+    public void testAddProduct2() throws Exception {
         // Given
-        ProductDTO productDTO = new ProductDTO("Product 3", "Description 3", 39.99, 200);
-        Product product = new Product("Product 3", "Description 3", 39.99, 200);
+        Product product = new ProductDTO("Product 3", "Description 3", 39.99, 200).toProduct();
 
-        // When: mock service to save the product and return the list
-        when(productService.save(productDTO)).thenReturn(product);
+        // When
+        when(productService.save(any(ProductDTO.class))).thenReturn(product);
 
-        // Then: check the response body for added product
+        // Then
         mockMvc.perform(post("/api/v1/product")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Product 3\", \"description\":\"Description 3\", \"price\":39.99, \"quantity\":200}")
-                )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.data.name").value("Product 3"))
-                .andExpect(jsonPath("$.data.description").value("Description 3"))
-                .andExpect(jsonPath("$.data.price").value(39.99))
-                .andExpect(jsonPath("$.data.quantity").value(200));
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"name\":\"Product 3\", \"description\":\"Description 3\", \"price\":39.99, \"quantity\":200}")
+                    )
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status").value("success"))
+                    .andExpect(jsonPath("$.message").value("Request was successful"))
+                    .andExpect(jsonPath("$.data.name").value("Product 3"))
+                    .andExpect(jsonPath("$.data.description").value("Description 3"))
+                    .andExpect(jsonPath("$.data.price").value(39.99))
+                    .andExpect(jsonPath("$.data.quantity").value(200))
+                    .andExpect(jsonPath("$.data.id").value(0))  // Assuming id is 0 here
+                    .andReturn();
+
+        // Verify the mock service method was called once
+        verify(productService, times(1)).save(any(ProductDTO.class));
     }
 }
