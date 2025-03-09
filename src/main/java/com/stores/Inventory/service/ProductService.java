@@ -35,6 +35,9 @@ public class ProductService {
         return false;
     }
 
-
-    
+    public Product update(Long id,ProductDTO productDTO){
+        Product product = productRepository.findById(id).get();
+        product.update(productDTO);
+        return productRepository.save(product);
+    }  
 }

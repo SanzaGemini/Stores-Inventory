@@ -101,4 +101,21 @@ public class ProductServiceTest {
         assertFalse(message );
     }
 
+    @Test
+    public void updateProduct(){
+        productDTO = new ProductDTO("BMW","M4 CS",3999999.90,1);
+
+        when(productRepository.findById(0L)).thenReturn(Optional.of(product));
+
+        product = productService.update(0L, productDTO);
+
+        assertEquals("BMW", product.getName());
+        assertEquals("M4 CS", product.getDescription());
+        assertEquals(3999999.90, product.getPrice());
+        assertEquals(1, product.getQuantity());
+
+    }
+
+    
+
 }

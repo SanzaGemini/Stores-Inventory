@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.stores.Inventory.model.Product;
+import com.stores.Inventory.model.ProductDTO;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -72,5 +73,23 @@ public class ProductTest {
         assertNull(defaultProduct.getDescription());
         assertNull(defaultProduct.getPrice());
         assertNull(defaultProduct.getQuantity());
+    }
+
+    @Test
+    public void testProductUpdate(){
+        Product product = new Product("Product name", "Product description", 0.0, 0);
+
+        assertEquals("Product name", product.getName());
+        assertEquals("Product description", product.getDescription());
+        assertEquals(0.0, product.getPrice());
+        assertEquals(0, product.getQuantity());
+
+        ProductDTO productDTO = new ProductDTO("Updated name", "Updated description", 9.99, 9);
+        product.update(productDTO);
+
+        assertEquals("Updated name", product.getName());
+        assertEquals("Updated description", product.getDescription());
+        assertEquals(9.99, product.getPrice());
+        assertEquals(9, product.getQuantity());
     }
 }

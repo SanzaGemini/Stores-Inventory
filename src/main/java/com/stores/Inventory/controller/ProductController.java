@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,12 @@ public class ProductController {
     @GetMapping("/products")
     public ResponseEntity<ApiResponse<Object>> GetAllProducts(){
          return new ResponseEntity<>(ApiResponse.success(productService.findAllProducts()), HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ApiResponse<Object>> updateProduct(@NonNull @PathVariable Long id,@Valid @RequestBody ProductDTO productDTO){
+        Product product = productService.update(id,productDTO);
+        return new ResponseEntity<>(ApiResponse.success(product),HttpStatus.OK);
     }
 
 

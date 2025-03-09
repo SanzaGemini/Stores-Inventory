@@ -75,7 +75,6 @@ public class ProductControllerTest {
         // When
         when(productService.save(any(ProductDTO.class))).thenReturn(product);
 
-        // Then
         mockMvc.perform(post("/api/v1/product")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"name\":\"Product 3\", \"description\":\"Description 3\", \"price\":39.99, \"quantity\":200}")
@@ -122,5 +121,33 @@ public class ProductControllerTest {
             .andExpect(jsonPath("$.message").value("Can Not Delete None Existing Product."));
 
             verify(productService, times(1)).delete(any(Long.class));
+    }
+
+
+    @Test
+    public void testUpdateProduct() throws Exception {
+        // Given
+        Product product = new ProductDTO("Product 4", "Description 4", 49.99, 250).toProduct();
+
+        // When
+        when(productService.save(any(ProductDTO.class))).thenReturn(product);
+
+        mockMvc.perform(post("/api/v1/update")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"name\":\"Product 3\", \"description\":\"Description 3\", \"price\":39.99, \"quantity\":200}")
+                    )
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.status").value("success"))
+                    .andExpect(jsonPath("$.message").value("Request was successful"))
+                    .andExpect(jsonPath("$.data.name").value("Product 3"))
+                    .andExpect(jsonPath("$.data.description").value("Description 3"))
+                    .andExpect(jsonPath("$.data.price").value(39.99))
+                    .andExpect(jsonPath("$.data.quantity").value(200))
+                    .andExpect(jsonPath("$.data.id").value(0))  // Assuming id is 0 here
+                    .andReturn();
+
+        // Verify the mock service method was called once
+        verify(productService, times(1)).save(any(ProductDTO.class));
     }
 }

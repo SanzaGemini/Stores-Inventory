@@ -160,4 +160,11 @@ public class Product {
     public String toString() {
         return name + " - " + description + " - " + price;
     }
+
+    public void update(ProductDTO productDTO){
+        this.name = productDTO.getName();
+        this.description = productDTO.getDescription();
+        this.price = productDTO.getPrice();
+        this.quantity = productDTO.getQuantity();
+    }
 }
