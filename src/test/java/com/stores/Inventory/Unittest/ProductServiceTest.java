@@ -106,6 +106,7 @@ public class ProductServiceTest {
         productDTO = new ProductDTO("BMW","M4 CS",3999999.90,1);
 
         when(productRepository.findById(0L)).thenReturn(Optional.of(product));
+        when(productRepository.save(any(Product.class))).thenReturn(productDTO.toProduct());
 
         product = productService.update(0L, productDTO);
 
