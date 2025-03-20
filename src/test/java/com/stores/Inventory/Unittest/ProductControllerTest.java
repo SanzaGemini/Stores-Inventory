@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -127,12 +126,12 @@ public class ProductControllerTest {
     @Test
     public void testUpdateProduct() throws Exception {
         // Given
-        Product product = new ProductDTO("Product 4", "Description 4", 49.99, 250).toProduct();
+        Product product = new ProductDTO("Product 3", "Description 3", 39.99, 200).toProduct();
 
         // When
-        when(productService.save(any(ProductDTO.class))).thenReturn(product);
+        when(productService.update(anyLong(),any(ProductDTO.class))).thenReturn(product);
 
-        mockMvc.perform(post("/api/v1/update")
+        mockMvc.perform(put("/api/v1/update/{id}",0L)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"name\":\"Product 3\", \"description\":\"Description 3\", \"price\":39.99, \"quantity\":200}")
                     )
@@ -148,6 +147,6 @@ public class ProductControllerTest {
                     .andReturn();
 
         // Verify the mock service method was called once
-        verify(productService, times(1)).save(any(ProductDTO.class));
+        verify(productService, times(1)).update(anyLong(),any(ProductDTO.class));
     }
 }
