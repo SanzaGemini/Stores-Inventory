@@ -20,9 +20,7 @@ public class ProductService {
     }
 
     public Product save(ProductDTO productDTO){
-        Product product = productRepository.save(productDTO.toProduct());
-        System.out.println(product.toString());
-        return product;
+        return productRepository.save(productDTO.toProduct());
     }
 
     public Boolean delete(long l) {
@@ -36,8 +34,12 @@ public class ProductService {
     }
 
     public Product update(Long id,ProductDTO productDTO){
-        Product product = productRepository.findById(id).get();
+        Product product = getProductByID(id);
         product.update(productDTO);
         return productRepository.save(product);
-    }  
+    }
+
+    public Product getProductByID(Long id){
+        return productRepository.findById(id).get();
+    }
 }

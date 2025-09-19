@@ -42,8 +42,8 @@ public class ProductServiceTest {
         MockitoAnnotations.openMocks(this);
         
         // Create a Product instance to be returned by productDTO.toProduct()
-        product = new Product("car", "BMW", (Double) 10000.0, 2);
-        productList = new ArrayList<Product>();
+        product = new Product("car", "BMW",  10000.0, 2);
+        productList = new ArrayList<>();
         productList.add(product);
         
         // Mock the behavior of productDTO.toProduct() to return the Product object
@@ -63,6 +63,21 @@ public class ProductServiceTest {
     }
 
     @Test
+    public void GetProductById(){
+        // mock when the get product by id method In the productRepository.findById() is called
+        when(productRepository.findById(0L)).thenReturn(Optional.of(product));
+
+        // Call the getProductById(Long is) in The Product Service
+        Product product1 = productService.getProductByID(0L);
+
+        // Verify that the repository's  findByID(Long id) was called
+        verify(productRepository,times(1)).findById(0L);
+
+        // Verify that the product was returned
+        assertEquals(product,product1);
+    }
+
+    @Test
     public void testSave() {
         // Stub the save method to return the product when productRepository.save() is called
         when(productRepository.save(product)).thenReturn(product);
@@ -70,7 +85,7 @@ public class ProductServiceTest {
         // Call the save method in ProductService and pass the mocked productDTO
         Product products = productService.save(productDTO);
 
-        // Verify that the repository's save method was called
+        // Verify that the repository's Save method was called
         verify(productRepository, times(1)).save(product);
         
         // Verify that the product list is not null
