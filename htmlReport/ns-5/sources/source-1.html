@@ -1,0 +1,182 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ApiResponse</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.stores.Inventory.response</a>
+</div>
+
+<h1>Coverage Summary for Class: ApiResponse (com.stores.Inventory.response)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ApiResponse</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.stores.Inventory.response;
+&nbsp;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;import lombok.Getter;
+&nbsp;import lombok.Setter;
+&nbsp;
+&nbsp;/**
+&nbsp; * A generic API response class to standardize the structure of API responses.
+&nbsp; * It supports success, error, and failure scenarios.
+&nbsp; *
+&nbsp; * @param &lt;T&gt; The type of data being returned in the response.
+&nbsp; */
+&nbsp;@Getter
+&nbsp;@Setter
+&nbsp;public class ApiResponse&lt;T&gt; {
+&nbsp;
+&nbsp;    private String status;  // Status of the response (e.g., success, error, failed)
+&nbsp;    private String message;  // A message related to the status of the response
+&nbsp;    private T data;  // The actual data of the response, can be any type
+&nbsp;
+&nbsp;    // Default constructor
+<b class="fc">&nbsp;    public ApiResponse() {}</b>
+&nbsp;
+&nbsp;    // Constructor for error responses with error messages
+&nbsp;    @SuppressWarnings(&quot;unchecked&quot;)
+<b class="fc">&nbsp;    public ApiResponse(String status, Map&lt;String,String&gt; errorMessages) {</b>
+<b class="fc">&nbsp;        this.status = status;              // e.g., &quot;error&quot;</b>
+<b class="fc">&nbsp;        this.message = &quot;There was an error processing the request&quot;;  // or a more specific message</b>
+<b class="fc">&nbsp;        this.data = (T) errorMessages;         // Assign the errorMessages directly without casting</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;
+&nbsp;    // Constructor for success responses with data
+<b class="fc">&nbsp;    public ApiResponse(String status, String message, T data) {</b>
+<b class="fc">&nbsp;        this.status = status;</b>
+<b class="fc">&nbsp;        this.message = message;</b>
+<b class="fc">&nbsp;        this.data = data;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Static method for a successful response
+&nbsp;    public static &lt;T&gt; ApiResponse&lt;T&gt; success(T data) {
+<b class="fc">&nbsp;        return new ApiResponse&lt;&gt;(&quot;success&quot;, &quot;Request was successful&quot;, data);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Static method for an error response with a map of error messages
+&nbsp;    public static ApiResponse&lt;Object&gt; error(Map&lt;String,String&gt; errorMessages) {
+<b class="fc">&nbsp;        return new ApiResponse&lt;&gt;(&quot;error&quot;, errorMessages);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Static method for a failure response with a message
+&nbsp;    public static ApiResponse&lt;Object&gt; failure(String message) {
+<b class="fc">&nbsp;        return new ApiResponse&lt;&gt;(&quot;failed&quot;, message, null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="fc">&nbsp;        if(data != null){</b>
+<b class="fc">&nbsp;            return &quot;{status=&quot; + status + &quot;, message=&quot; + message + &quot;, data=&quot; + data + &quot;}&quot;;</b>
+<b class="fc">&nbsp;        } return &quot;{status=&quot; + status + &quot;, message=&quot; + message + &quot;}&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-02 11:48</div>
+</div>
+</body>
+</html>

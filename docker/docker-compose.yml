@@ -9,22 +9,30 @@ services:
       MYSQL_PASSWORD: 'new_password'
       MYSQL_ROOT_PASSWORD: 'new_password'
     ports:
-      - '3306:3306'  # Expose MySQL port
+      - '3307:3306'  # Expose MySQL port
     expose:
-      - '3306'
+      - '3307'
     volumes:
       - my-db:/var/lib/mysql  # Persist MySQL data
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   
   app:
     image: sanelevilakazi/stores-inventory  # Your Spring Boot app's Docker image
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - '8080:8080'  # Map the app port (Spring Boot usually runs on 8080)
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/Inventory  # Spring Boot connects to MySQL
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: new_password
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/Inventory?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      # Spring Boot connects to MySQL
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'new_password'
+      MYSQL_ROOT_PASSWORD: 'new_password'
     restart: always
 
 volumes:
