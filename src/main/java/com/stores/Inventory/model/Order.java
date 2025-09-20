@@ -43,4 +43,12 @@ public class Order {
     private BigDecimal calculateOrderPrice(BigDecimal price,int quantity){
         return price.multiply(BigDecimal.valueOf(quantity));
     }
+
+    public void setLocalDateTime(LocalDateTime now) {
+        this.DateTime = now;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return this.DateTime;
+    }
 }
