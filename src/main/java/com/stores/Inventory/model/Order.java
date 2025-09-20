@@ -1,12 +1,18 @@
 package com.stores.Inventory.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
+@Setter
+@Entity
+@Table(name = "orders")
 public class Order {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +41,6 @@ public class Order {
     }
 
     private BigDecimal calculateOrderPrice(BigDecimal price,int quantity){
-        if (price == null) throw new NullPointerException("Price Is Null");
         return price.multiply(BigDecimal.valueOf(quantity));
     }
 }

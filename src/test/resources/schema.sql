@@ -1,5 +1,6 @@
--- Creating the products table (assumed for OrderItem's @ManyToOne relationship)CREATE TABLE Product (
-    Id BIGINT INT PRIMARY KEY AUTO_INCREMENT,
+-- Creating the products table (assumed for OrderItem's @ManyToOne relationship)
+CREATE TABLE product (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
     Name VARCHAR(255) NOT NULL,
     Description VARCHAR(255) NOT NULL,
     Price DECIMAL(19, 2) NOT NULL,
@@ -8,7 +9,7 @@
 
 -- Creating the orders table for the Order entity
 CREATE TABLE orders (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     local_date_time TIMESTAMP,
     total_price DECIMAL(19,2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -16,7 +17,7 @@ CREATE TABLE orders (
 
 -- Creating the order_items table for the OrderItem entity
 CREATE TABLE order_items (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     quantity INT NOT NULL,
     price DECIMAL(19,2),
     product_id BIGINT NOT NULL,
