@@ -11,7 +11,7 @@ public class Order {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime localDateTime;
+    private LocalDateTime DateTime;
     private BigDecimal totalPrice;
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
