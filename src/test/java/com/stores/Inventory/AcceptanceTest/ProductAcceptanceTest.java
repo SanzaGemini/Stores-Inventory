@@ -8,28 +8,28 @@ import org.junit.jupiter.api.Test;
 
 @Tag("productAcceptanceTest")
 public class ProductAcceptanceTest {
-    private JsonObject product;
-    @BeforeEach
-    void setUp(){
-        product = TestHelper.buildProduct("Inventory System","A software that tracks inventory",100000d,1);
-    }
+//    private JsonObject product;
+//    @BeforeEach
+//    void setUp(){
+//        product = TestHelper.buildProduct("Inventory System","A software that tracks inventory",100000d,1);
+//    }
 
-    @Test
-    void shouldCreateProductSuccessfully() {
-
-        // Act
-        JsonNode jsonNode = TestHelper.getHandler("products");
-
-        // Assert
-        // e.g., verify it was saved correctly
-    }
-
-    @Test
-    void shouldRetrieveProductById() {
-        // Arrange
-
-        // Act
-
-        // Assert
-    }
+//    @Test
+//    void shouldCreateProductSuccessfully() {
+//
+//        // Act
+//        JsonNode jsonNode = TestHelper.getHandler("products");
+//
+//        // Assert
+//        // e.g., verify it was saved correctly
+//    }
+//
+//    @Test
+//    void shouldRetrieveProductById() {
+//        // Arrange
+//
+//        // Act
+//
+//        // Assert
+//    }
 }

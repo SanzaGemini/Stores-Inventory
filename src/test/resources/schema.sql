@@ -1,5 +1,5 @@
 -- Creating the products table (assumed for OrderItem's @ManyToOne relationship)
-CREATE TABLE product (
+CREATE TABLE products (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     Name VARCHAR(255) NOT NULL,
     Description VARCHAR(255) NOT NULL,
@@ -20,8 +20,8 @@ CREATE TABLE order_items (
     id INT PRIMARY KEY AUTO_INCREMENT,
     quantity INT NOT NULL,
     price DECIMAL(19,2),
-    product_id BIGINT NOT NULL,
-    order_id BIGINT NOT NULL,
+    product_id INT NOT NULL,
+    order_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
