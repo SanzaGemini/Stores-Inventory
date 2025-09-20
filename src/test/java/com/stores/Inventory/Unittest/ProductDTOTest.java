@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import com.stores.Inventory.model.Product;
 import com.stores.Inventory.model.ProductDTO;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -23,7 +25,7 @@ public class ProductDTOTest {
         productDTO = new ProductDTO();
         productDTO.setName("Laptop");
         productDTO.setDescription("A powerful laptop");
-        productDTO.setPrice(999.99);
+        productDTO.setPrice(BigDecimal.valueOf(999.99));
         productDTO.setQuantity(10);
     }
 
@@ -34,17 +36,17 @@ public class ProductDTOTest {
     public void testGettersAndSetters() {
         assertEquals("Laptop", productDTO.getName());
         assertEquals("A powerful laptop", productDTO.getDescription());
-        assertEquals(999.99, productDTO.getPrice());
+        assertEquals(BigDecimal.valueOf(999.99), productDTO.getPrice());
         assertEquals(10, productDTO.getQuantity());
 
         productDTO.setName("Smartphone");
         productDTO.setDescription("A modern smartphone");
-        productDTO.setPrice(499.99);
+        productDTO.setPrice(BigDecimal.valueOf(499.99));
         productDTO.setQuantity(20);
 
         assertEquals("Smartphone", productDTO.getName());
         assertEquals("A modern smartphone", productDTO.getDescription());
-        assertEquals(499.99, productDTO.getPrice());
+        assertEquals(BigDecimal.valueOf(499.99), productDTO.getPrice());
         assertEquals(20, productDTO.getQuantity());
     }
 
@@ -58,7 +60,7 @@ public class ProductDTOTest {
         assertNotNull(product);
         assertEquals("Laptop", product.getName());
         assertEquals("A powerful laptop", product.getDescription());
-        assertEquals(999.99, product.getPrice());
+        assertEquals(BigDecimal.valueOf(999.99), product.getPrice());
         assertEquals(10, product.getQuantity());
     }
 

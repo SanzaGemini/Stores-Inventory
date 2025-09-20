@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import com.stores.Inventory.model.Product;
 import com.stores.Inventory.model.ProductDTO;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -20,7 +22,7 @@ public class ProductTest {
      */
     @BeforeEach
     public void setUp() {
-        product = new Product("Laptop", "A powerful laptop", 999.99, 10);
+        product = new Product("Laptop", "A powerful laptop", BigDecimal.valueOf(999.99), 10);
     }
 
     /**
@@ -31,7 +33,7 @@ public class ProductTest {
         assertNotNull(product);
         assertEquals("Laptop", product.getName());
         assertEquals("A powerful laptop", product.getDescription());
-        assertEquals(999.99, product.getPrice());
+        assertEquals(BigDecimal.valueOf(999.99), product.getPrice());
         assertEquals(10, product.getQuantity());
     }
 
@@ -40,16 +42,18 @@ public class ProductTest {
      */
     @Test
     public void testSetters() {
+        BigDecimal expectedPrice = BigDecimal.valueOf(499.99);
+
         product.setId(1L);
         product.setName("Smartphone");
         product.setDescription("A modern smartphone");
-        product.setPrice(499.99);
+        product.setPrice(expectedPrice);
         product.setQuantity(20);
 
         assertEquals(1L, product.getId());
         assertEquals("Smartphone", product.getName());
         assertEquals("A modern smartphone", product.getDescription());
-        assertEquals(499.99, product.getPrice());
+        assertEquals(expectedPrice, product.getPrice());
         assertEquals(20, product.getQuantity());
     }
 
@@ -77,19 +81,20 @@ public class ProductTest {
 
     @Test
     public void testProductUpdate(){
-        Product product = new Product("Product name", "Product description", 0.0, 0);
+        Product product = new Product("Product name", "Product description", BigDecimal.valueOf(0.0), 0);
+        BigDecimal expectedPrice = BigDecimal.valueOf(9.99);
 
         assertEquals("Product name", product.getName());
         assertEquals("Product description", product.getDescription());
-        assertEquals(0.0, product.getPrice());
+        assertEquals(BigDecimal.valueOf(0.0), product.getPrice());
         assertEquals(0, product.getQuantity());
 
-        ProductDTO productDTO = new ProductDTO("Updated name", "Updated description", 9.99, 9);
+        ProductDTO productDTO = new ProductDTO("Updated name", "Updated description", expectedPrice, 9);
         product.update(productDTO);
 
         assertEquals("Updated name", product.getName());
         assertEquals("Updated description", product.getDescription());
-        assertEquals(9.99, product.getPrice());
+        assertEquals(expectedPrice, product.getPrice());
         assertEquals(9, product.getQuantity());
     }
 }

@@ -39,15 +39,14 @@ public class ProductController {
     }
 
 
-    @PostMapping("/product")
+    @PostMapping("/add/product")
     public ResponseEntity<ApiResponse<Object>> AddProduct(@Valid @RequestBody ProductDTO productDTO){
          Product product = productService.save(productDTO);
         return new ResponseEntity<>(ApiResponse.success(product), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse<Object>> deleteProduct(@NonNull @PathVariable Long id){
-        
         return productService.delete(id) ? new ResponseEntity<>(ApiResponse.success("The product was successfully Deleted."),HttpStatus.OK)
             : new ResponseEntity<>(ApiResponse.failure("Can Not Delete None Existing Product."),HttpStatus.BAD_REQUEST);
     }

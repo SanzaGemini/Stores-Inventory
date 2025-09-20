@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.util.Objects;
+
 /**
  * A Data Transfer Object (DTO) class for transferring product data.
  * This class provides getter and setter methods for product attributes
@@ -18,7 +21,7 @@ public class ProductDTO {
 
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price;
     private int quantity;
 
     /**

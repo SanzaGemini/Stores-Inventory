@@ -19,6 +19,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +46,8 @@ public class ProductControllerTest {
     @Test
     public void testGetAllProducts() throws Exception {
         // Given
-        Product product1 = new Product("Product 1", "Description 1", 19.99, 100);
-        Product product2 = new Product("Product 2", "Description 2", 29.99, 50);
+        Product product1 = new Product("Product 1", "Description 1", BigDecimal.valueOf(19.99), 100);
+        Product product2 = new Product("Product 2", "Description 2", BigDecimal.valueOf(29.99), 50);
         List<Product> products = Arrays.asList(product1, product2);
 
         // When
@@ -69,7 +70,7 @@ public class ProductControllerTest {
     @Test
     public void testAddProduct2() throws Exception {
         // Given
-        Product product = new ProductDTO("Product 3", "Description 3", 39.99, 200).toProduct();
+        Product product = new ProductDTO("Product 3", "Description 3", BigDecimal.valueOf(39.99), 200).toProduct();
 
         // When
         when(productService.save(any(ProductDTO.class))).thenReturn(product);
@@ -126,7 +127,7 @@ public class ProductControllerTest {
     @Test
     public void testUpdateProduct() throws Exception {
         // Given
-        Product product = new ProductDTO("Product 3", "Description 3", 39.99, 200).toProduct();
+        Product product = new ProductDTO("Product 3", "Description 3", BigDecimal.valueOf(39.99), 200).toProduct();
 
         // When
         when(productService.update(anyLong(),any(ProductDTO.class))).thenReturn(product);

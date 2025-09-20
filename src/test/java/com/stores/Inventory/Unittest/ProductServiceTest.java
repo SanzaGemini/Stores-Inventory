@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +43,7 @@ public class ProductServiceTest {
         MockitoAnnotations.openMocks(this);
         
         // Create a Product instance to be returned by productDTO.toProduct()
-        product = new Product("car", "BMW",  10000.0, 2);
+        product = new Product("car", "BMW",  new BigDecimal("10000.0"), 2);
         productList = new ArrayList<>();
         productList.add(product);
         
@@ -118,7 +119,8 @@ public class ProductServiceTest {
 
     @Test
     public void updateProduct(){
-        productDTO = new ProductDTO("BMW","M4 CS",3999999.90,1);
+        BigDecimal expectedPrice = new BigDecimal("3999999.90");
+        productDTO = new ProductDTO("BMW","M4 CS",expectedPrice,1);
 
         when(productRepository.findById(0L)).thenReturn(Optional.of(product));
         when(productRepository.save(any(Product.class))).thenReturn(productDTO.toProduct());
@@ -127,7 +129,7 @@ public class ProductServiceTest {
 
         assertEquals("BMW", product.getName());
         assertEquals("M4 CS", product.getDescription());
-        assertEquals(3999999.90, product.getPrice());
+        assertEquals(expectedPrice, product.getPrice());
         assertEquals(1, product.getQuantity());
 
     }

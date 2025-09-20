@@ -9,10 +9,17 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Represents a product entity.
  */
+@Setter
+@Getter
 @Entity
 @Table(name = "Products")
 public class Product {
@@ -33,7 +40,7 @@ public class Product {
 
     @Column(name = "Price")
     @NotNull(message = "Price is required!")
-    private Double price;
+    private BigDecimal price;
 
     @Column(name = "Quantity")
     @NotNull(message = "Quantity is required!")
@@ -53,100 +60,10 @@ public class Product {
      * @param price       the price of the product
      * @param quantity    the quantity of the product
      */
-    public Product(String name, String description, Double price, Integer quantity) {
+    public Product(String name, String description, BigDecimal price, Integer quantity) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.quantity = quantity;
-    }
-
-    /**
-     * Get the product ID.
-     *
-     * @return the product ID
-     */
-    public long getId() {
-        return id;
-    }
-
-    /**
-     * Set the product ID.
-     *
-     * @param id the product ID
-     */
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    /**
-     * Get the product name.
-     *
-     * @return the product name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Set the product name.
-     *
-     * @param name the product name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Get the product description.
-     *
-     * @return the product description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Set the product description.
-     *
-     * @param description the product description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Get the product price.
-     *
-     * @return the product price
-     */
-    public Double getPrice() {
-        return price;
-    }
-
-    /**
-     * Set the product price.
-     *
-     * @param price the product price
-     */
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    /**
-     * Get the product quantity.
-     *
-     * @return the product quantity
-     */
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    /**
-     * Set the product quantity.
-     *
-     * @param quantity the product quantity
-     */
-    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -166,5 +83,19 @@ public class Product {
         this.description = productDTO.getDescription();
         this.price = productDTO.getPrice();
         this.quantity = productDTO.getQuantity();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Product product)) return false;
+        return id == product.id && Objects.equals(name, product.name)
+                && Objects.equals(description, product.description)
+                && Objects.equals(price, product.price)
+                && Objects.equals(quantity, product.quantity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, price, quantity);
     }
 }
