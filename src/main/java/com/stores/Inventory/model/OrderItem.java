@@ -17,12 +17,6 @@ import java.math.BigDecimal;
 @Table(name = "order_items")
 public class OrderItem {
 
-    @Autowired
-    OrderService orderService;
-
-    @Autowired
-    ProductService productService;
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int quantity;
@@ -36,17 +30,11 @@ public class OrderItem {
 
     }
 
-    public OrderItem(Integer quantity,BigDecimal price,Long product,Long order){
+    public OrderItem(Integer quantity,BigDecimal price,Product product,Order order){
         this.quantity = quantity;
         this.price = price;
-        this.product = getProduct(product);
-        this.order = getOrder(order);
+        this.product = product;
+        this.order = order;
     }
 
-    private Order getOrder(Long id){
-       return orderService.getOrderById(id);
-    }
-    private Product getProduct(Long id){
-        return productService.getProductByID(id);
-    }
 }
