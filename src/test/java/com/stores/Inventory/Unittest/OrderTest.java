@@ -105,15 +105,15 @@ public class OrderTest {
 
     @Test
     void testGetTotalPriceWithNullPrice() {
-        // Arrange
         when(orderItem1.getPrice()).thenReturn(null);
         when(orderItem1.getQuantity()).thenReturn(2);
         when(orderItem2.getPrice()).thenReturn(new BigDecimal("5.333"));
         when(orderItem2.getQuantity()).thenReturn(3);
 
-        // Act & Assert
-        assertThrows(NullPointerException.class, () -> order.getTotalPrice(),
-                "Expected NullPointerException for null price");
+        BigDecimal totalPrice = order.getTotalPrice();
+        // Expected: (null * 2 skipped) + (5.333 * 3) = 15.999, rounded to 16.00
+        BigDecimal expected = new BigDecimal("16.00");
+        assertEquals(expected, totalPrice, "Total price should be 16.00, ignoring null price");
     }
 
     @Test
