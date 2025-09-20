@@ -53,14 +53,14 @@ public class OrderItemTest {
 
     @Test
     void testSetAndGetProduct() {
-        orderItem.setProductId(product.getId());
-        assertEquals(product.getId(), orderItem.getProductId(), "Product should be set and retrieved correctly");
+        orderItem.setProduct(product);
+        assertEquals(product, orderItem.getProduct(), "Product should be set and retrieved correctly");
     }
 
     @Test
     void testSetAndGetOrder() {
-        orderItem.setOrderId(order.getId());
-        assertEquals(order.getId(), orderItem.getOrderId(), "Order should be set and retrieved correctly");
+        orderItem.setOrder(order);
+        assertEquals(order, orderItem.getOrder(), "Order should be set and retrieved correctly");
     }
 
     @Test
@@ -71,14 +71,14 @@ public class OrderItemTest {
 
     @Test
     void testNullProduct() {
-        orderItem.setProductId(null);
-        assertNull(orderItem.getProductId(), "Product should be null when set to null");
+        orderItem.setProduct(null);
+        assertNull(orderItem.getProduct(), "Product should be null when set to null");
     }
 
     @Test
     void testNullOrder() {
-        orderItem.setOrderId(null);
-        assertNull(orderItem.getOrderId(), "Order should be null when set to null");
+        orderItem.setOrder(null);
+        assertNull(orderItem.getOrder(), "Order should be null when set to null");
     }
 
     @Test

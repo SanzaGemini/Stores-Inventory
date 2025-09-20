@@ -21,21 +21,25 @@ public class OrderItem {
     private Long id;
     private int quantity;
     private BigDecimal price;
+    // Relationship to Product
     @ManyToOne
-    private Long productId;
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    // Relationship to Order
     @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Long orderId;
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     public OrderItem(){
 
     }
 
-    public OrderItem(Integer quantity,BigDecimal price,Long productId,Long orderId){
-        this.quantity = quantity;
-        this.price = price;
-        this.productId = productId;
-        this.orderId = orderId;
-    }
+    public OrderItem(int quantity, BigDecimal price, Product product, Order order) {
+            this.quantity = quantity;
+            this.price = price;
+            this.product = product;
+            this.order = order;
+        }
 
 }

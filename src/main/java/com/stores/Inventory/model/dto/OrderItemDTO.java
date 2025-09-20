@@ -24,10 +24,10 @@ public class OrderItemDTO {
     private Long id;
     private int quantity;
     private BigDecimal price;
-    private Long productId;
-    private Long orderId;
+    private Product product;
+    private Order order;
 
     public OrderItem toOrderItem(){
-        return new OrderItem(quantity,price,productId,orderId);
+        return new OrderItem(quantity,price, product,order);
     }
 }

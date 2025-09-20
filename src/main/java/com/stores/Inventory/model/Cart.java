@@ -27,7 +27,7 @@ public class Cart {
         }
 
         Optional<CartItem> existingItem = items.stream()
-                .filter(item -> Objects.equals(item.getProductId(),product.getId()))
+                .filter(item -> Objects.equals(item.getProduct().getId(),product.getId()))
                 .findFirst();
 
         if (existingItem.isPresent()) {
@@ -35,7 +35,7 @@ public class Cart {
             item.setQuantity(item.getQuantity() + quantity);
         } else {
             CartItem newItem = new CartItem();
-            newItem.setProductId(product.getId());
+            newItem.setProduct(product);
             newItem.setQuantity(quantity);
             newItem.setUnitPrice(product.getPrice()); // Snapshot
             items.add(newItem);
@@ -44,18 +44,18 @@ public class Cart {
     }
 
     // Remove product from cart
-    public void removeProduct(Long productId) {
-        items.removeIf(item -> Objects.equals(item.getProductId(),productId));
+    public void removeProduct(Product product) {
+        items.removeIf(item -> Objects.equals(item.getProduct(),product));
     }
 
     // Update quantity
-    public void updateQuantity(Long productId, int quantity) {
+    public void updateQuantity(Product product, int quantity) {
         if (quantity <= 0) {
-            removeProduct(productId);
+            removeProduct(product);
             return;
         }
         items.stream()
-                .filter(item -> Objects.equals(item.getProductId(),productId))
+                .filter(item -> Objects.equals(item.getProduct(),product))
                 .findFirst()
                 .ifPresent(item -> item.setQuantity(quantity));
     }
@@ -82,8 +82,8 @@ public class Cart {
             OrderItem orderItem = new OrderItem();
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setPrice(cartItem.getUnitPrice()); // Use snapshot price
-            orderItem.setProductId(cartItem.getProductId());
-            orderItem.setOrderId(order.getId());
+            orderItem.setProduct(cartItem.getProduct());
+            orderItem.setOrder(order);
             order.getOrderItems().add(orderItem);
         }
 

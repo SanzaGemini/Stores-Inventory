@@ -30,6 +30,7 @@ public class  CartTest {
     }
 
     @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
     void testAddProduct() {
         // Arrange
         when(product1.getId()).thenReturn(1L);
@@ -62,12 +63,13 @@ public class  CartTest {
     }
 
     @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
     void testUpdateQuantity() {
         when(product1.getId()).thenReturn(1L);
         when(product1.getPrice()).thenReturn(new BigDecimal("10.00"));
 
         cart.addProduct(product1, 2);
-        cart.updateQuantity(1L, 3);
+        cart.updateQuantity(product1, 3);
 
         assertEquals(3, cart.getItems().get(0).getQuantity());
         assertEquals(new BigDecimal("30.00"), cart.getTotal());
@@ -80,13 +82,14 @@ public class  CartTest {
         when(product1.getPrice()).thenReturn(new BigDecimal("10.00"));
 
         cart.addProduct(product1, 2);
-        cart.removeProduct(1L);
+        cart.removeProduct(product1);
 
         assertTrue(cart.getItems().isEmpty());
         assertEquals( new BigDecimal("0.00"), cart.getTotal());
     }
 
     @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
     void testCheckoutCreatesOrderAndItems() {
         // Arrange
         when(product1.getId()).thenReturn(1L);
