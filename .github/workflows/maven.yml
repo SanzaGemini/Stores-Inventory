@@ -1,11 +1,6 @@
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Inventory CI with Maven
 
 on:
@@ -15,18 +10,17 @@ on:
     branches: [ "master" ]
 
 jobs:
-
   commit:
     runs-on: ubuntu-latest
 
     services:
       mysql:
-        image: mysql:8.0  # Use MySQL 8.0
+        image: mysql:8.0
         env:
-          MYSQL_DATABASE: Inventory  # Create a database named Inventory
-          MYSQL_ROOT_PASSWORD: new_password  # Root password
+          MYSQL_DATABASE: Inventory
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
         ports:
-          - 3306:3306  # Expose MySQL port
+          - 3306:3306
         options: >-
           --health-cmd "mysqladmin ping -h localhost" 
           --health-interval 10s 
@@ -51,25 +45,12 @@ jobs:
             echo "Waiting for MySQL..."
             sleep 2
           done
-      - name: Unittest Maven
+      - name: Run Unit Tests with Maven
         run: mvn clean -Dtest=com.stores.Inventory.Unittest.*Test test
 
   build:
     runs-on: ubuntu-latest
-
-    services:
-      mysql:
-        image: mysql:8.0  # Use MySQL 8.0
-        env:
-          MYSQL_DATABASE: Inventory  # Create a database named Inventory
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}  # Root password
-        ports:
-          - 3306:3306  # Expose MySQL port
-        options: >-
-          --health-cmd "mysqladmin ping -h localhost" 
-          --health-interval 10s 
-          --health-timeout 5s 
-          --health-retries 3
+    needs: commit
 
     steps:
       - uses: actions/checkout@v4
@@ -81,7 +62,6 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn clean install -DskipTests
-
       - name: Build & push Docker image
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
