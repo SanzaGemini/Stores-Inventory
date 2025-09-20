@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class CartItem {
-    private Product product;
+    private Long productId;
     private int quantity;
     private BigDecimal unitPrice; // Snapshot of price at add time to avoid changes
 

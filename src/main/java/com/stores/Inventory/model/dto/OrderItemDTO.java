@@ -28,18 +28,6 @@ public class OrderItemDTO {
     private Long orderId;
 
     public OrderItem toOrderItem(){
-        Product product = getProduct(productId);
-        Order order = getOrder(orderId);
-        return new OrderItem(quantity,price,product,order);
+        return new OrderItem(quantity,price,productId,orderId);
     }
-
-    private Product getProduct(Long id){
-        return productRepository.findById(id).get();
-    }
-
-    private Order getOrder(Long id){
-        return orderRepository.findById(id).get();
-    }
-
-
 }

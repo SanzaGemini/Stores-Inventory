@@ -22,19 +22,20 @@ public class OrderItem {
     private int quantity;
     private BigDecimal price;
     @ManyToOne
-    private Product product;
+    private Long productId;
     @ManyToOne
-    private Order order;
+    @JoinColumn(name = "order_id")
+    private Long orderId;
 
     public OrderItem(){
 
     }
 
-    public OrderItem(Integer quantity,BigDecimal price,Product product,Order order){
+    public OrderItem(Integer quantity,BigDecimal price,Long productId,Long orderId){
         this.quantity = quantity;
         this.price = price;
-        this.product = product;
-        this.order = order;
+        this.productId = productId;
+        this.orderId = orderId;
     }
 
 }

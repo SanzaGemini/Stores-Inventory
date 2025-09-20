@@ -18,7 +18,7 @@ public class Cart {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // Add product to cart (or increment quantity if exists)
-    public void addProduct(Product product, int quantity) {
+    public List<CartItem> addProduct(Product product, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
@@ -27,7 +27,7 @@ public class Cart {
         }
 
         Optional<CartItem> existingItem = items.stream()
-                .filter(item -> Objects.equals(item.getProduct().getId(),product.getId()))
+                .filter(item -> Objects.equals(item.getProductId(),product.getId()))
                 .findFirst();
 
         if (existingItem.isPresent()) {
@@ -35,16 +35,17 @@ public class Cart {
             item.setQuantity(item.getQuantity() + quantity);
         } else {
             CartItem newItem = new CartItem();
-            newItem.setProduct(product);
+            newItem.setProductId(product.getId());
             newItem.setQuantity(quantity);
             newItem.setUnitPrice(product.getPrice()); // Snapshot
             items.add(newItem);
         }
+        return this.items;
     }
 
     // Remove product from cart
     public void removeProduct(Long productId) {
-        items.removeIf(item -> Objects.equals(item.getProduct().getId(),productId));
+        items.removeIf(item -> Objects.equals(item.getProductId(),productId));
     }
 
     // Update quantity
@@ -54,7 +55,7 @@ public class Cart {
             return;
         }
         items.stream()
-                .filter(item -> Objects.equals(item.getProduct().getId(),productId))
+                .filter(item -> Objects.equals(item.getProductId(),productId))
                 .findFirst()
                 .ifPresent(item -> item.setQuantity(quantity));
     }
@@ -81,8 +82,8 @@ public class Cart {
             OrderItem orderItem = new OrderItem();
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setPrice(cartItem.getUnitPrice()); // Use snapshot price
-            orderItem.setProduct(cartItem.getProduct());
-            orderItem.setOrder(order);
+            orderItem.setProductId(cartItem.getProductId());
+            orderItem.setOrderId(order.getId());
             order.getOrderItems().add(orderItem);
         }
 
