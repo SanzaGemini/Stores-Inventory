@@ -35,6 +35,7 @@ public class Order {
     }
 
     private BigDecimal calculateOrderPrice(BigDecimal price,int quantity){
+        if (price == null) throw new NullPointerException("Price Is Null");
         return price.multiply(BigDecimal.valueOf(quantity));
     }
 }
