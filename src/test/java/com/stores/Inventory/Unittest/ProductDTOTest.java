@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.stores.Inventory.model.Product;
-import com.stores.Inventory.model.ProductDTO;
+import com.stores.Inventory.model.dto.ProductDTO;
 
 import java.math.BigDecimal;
 

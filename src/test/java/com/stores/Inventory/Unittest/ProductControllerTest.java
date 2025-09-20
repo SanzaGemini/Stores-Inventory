@@ -2,7 +2,7 @@ package com.stores.Inventory.Unittest;
 
 import com.stores.Inventory.controller.ProductController;
 import com.stores.Inventory.model.Product;
-import com.stores.Inventory.model.ProductDTO;
+import com.stores.Inventory.model.dto.ProductDTO;
 import com.stores.Inventory.repository.ProductRepository;
 import com.stores.Inventory.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;

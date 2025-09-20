@@ -1,5 +1,6 @@
 package com.stores.Inventory.model;
 
+import com.stores.Inventory.model.dto.ProductDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,12 +1,12 @@
-package com.stores.Inventory.model;
+package com.stores.Inventory.model.dto;
 
+import com.stores.Inventory.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 /**
  * A Data Transfer Object (DTO) class for transferring product data.

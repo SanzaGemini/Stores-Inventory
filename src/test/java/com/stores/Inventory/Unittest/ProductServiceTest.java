@@ -19,7 +19,7 @@ import org.mockito.MockitoAnnotations;
 
 
 import com.stores.Inventory.model.Product;
-import com.stores.Inventory.model.ProductDTO;
+import com.stores.Inventory.model.dto.ProductDTO;
 import com.stores.Inventory.repository.ProductRepository;
 import com.stores.Inventory.service.ProductService;
 

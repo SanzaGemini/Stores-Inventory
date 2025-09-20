@@ -1,8 +1,13 @@
 package com.stores.Inventory.model;
 
+import com.stores.Inventory.repository.OrderRepository;
+import com.stores.Inventory.repository.ProductRepository;
+import com.stores.Inventory.service.OrderService;
+import com.stores.Inventory.service.ProductService;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 
@@ -12,6 +17,12 @@ import java.math.BigDecimal;
 @Table(name = "order_items")
 public class OrderItem {
 
+    @Autowired
+    OrderService orderService;
+
+    @Autowired
+    ProductService productService;
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int quantity;
@@ -20,4 +31,22 @@ public class OrderItem {
     private Product product;
     @ManyToOne
     private Order order;
+
+    public OrderItem(){
+
+    }
+
+    public OrderItem(Integer quantity,BigDecimal price,Long product,Long order){
+        this.quantity = quantity;
+        this.price = price;
+        this.product = getProduct(product);
+        this.order = getOrder(order);
+    }
+
+    private Order getOrder(Long id){
+       return orderService.getOrderById(id);
+    }
+    private Product getProduct(Long id){
+        return productService.getProductByID(id);
+    }
 }

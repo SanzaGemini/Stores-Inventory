@@ -1,5 +1,6 @@
 package com.stores.Inventory.controller;
 
+import com.stores.Inventory.model.dto.ProductDTO;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;

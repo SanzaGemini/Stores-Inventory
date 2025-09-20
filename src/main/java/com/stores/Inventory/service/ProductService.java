@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.stores.Inventory.model.Product;
-import com.stores.Inventory.model.ProductDTO;
+import com.stores.Inventory.model.dto.ProductDTO;
 import com.stores.Inventory.repository.ProductRepository;
 @Service
 public class ProductService {
