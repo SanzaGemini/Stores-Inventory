@@ -47,6 +47,10 @@ public class Product {
     @NotNull(message = "Quantity is required!")
     private Integer quantity;
 
+    @Column(name = "Category")
+    @NotNull(message = "Category is Required")
+    private String category;
+
     /**
      * Default constructor for Product.
      */
@@ -61,11 +65,12 @@ public class Product {
      * @param price       the price of the product
      * @param quantity    the quantity of the product
      */
-    public Product(String name, String description, BigDecimal price, Integer quantity) {
+    public Product(String name, String description, BigDecimal price, Integer quantity,String category) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
+        this.category = category;
     }
 
     /**
@@ -84,6 +89,7 @@ public class Product {
         this.description = productDTO.getDescription();
         this.price = productDTO.getPrice();
         this.quantity = productDTO.getQuantity();
+        this.category = productDTO.getCategory();
     }
 
     @Override

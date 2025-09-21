@@ -23,6 +23,7 @@ public class ProductDTO {
     private String description;
     private BigDecimal price;
     private int quantity;
+    private String category;
 
     /**
      * Converts this ProductDTO into a Product entity.
@@ -30,6 +31,6 @@ public class ProductDTO {
      * @return a new Product object containing the data from this DTO
      */
     public Product toProduct() {
-        return new Product(name, description, price, quantity);
+        return new Product(name, description, price, quantity,category);
     }
 }

@@ -22,7 +22,7 @@ public class ProductTest {
      */
     @BeforeEach
     public void setUp() {
-        product = new Product("Laptop", "A powerful laptop", BigDecimal.valueOf(999.99), 10);
+        product = new Product("Laptop", "A powerful laptop", BigDecimal.valueOf(999.99), 10,"Tech");
     }
 
     /**
@@ -35,6 +35,7 @@ public class ProductTest {
         assertEquals("A powerful laptop", product.getDescription());
         assertEquals(BigDecimal.valueOf(999.99), product.getPrice());
         assertEquals(10, product.getQuantity());
+        assertEquals("Tech",product.getCategory());
     }
 
     /**
@@ -49,12 +50,14 @@ public class ProductTest {
         product.setDescription("A modern smartphone");
         product.setPrice(expectedPrice);
         product.setQuantity(20);
+        product.setCategory("Tech");
 
         assertEquals(1L, product.getId());
         assertEquals("Smartphone", product.getName());
         assertEquals("A modern smartphone", product.getDescription());
         assertEquals(expectedPrice, product.getPrice());
         assertEquals(20, product.getQuantity());
+        assertEquals("Tech",product.getCategory());
     }
 
     /**
@@ -77,24 +80,27 @@ public class ProductTest {
         assertNull(defaultProduct.getDescription());
         assertNull(defaultProduct.getPrice());
         assertNull(defaultProduct.getQuantity());
+        assertNull(defaultProduct.getCategory());
     }
 
     @Test
     public void testProductUpdate(){
-        Product product = new Product("Product name", "Product description", BigDecimal.valueOf(0.0), 0);
+        Product product = new Product("Product name", "Product description", BigDecimal.valueOf(0.0), 0,"A Product");
         BigDecimal expectedPrice = BigDecimal.valueOf(9.99);
 
         assertEquals("Product name", product.getName());
         assertEquals("Product description", product.getDescription());
         assertEquals(BigDecimal.valueOf(0.0), product.getPrice());
         assertEquals(0, product.getQuantity());
+        assertEquals("A Product",product.getCategory());
 
-        ProductDTO productDTO = new ProductDTO("Updated name", "Updated description", expectedPrice, 9);
+        ProductDTO productDTO = new ProductDTO("Updated name", "Updated description", expectedPrice, 9,"Updated Product");
         product.update(productDTO);
 
         assertEquals("Updated name", product.getName());
         assertEquals("Updated description", product.getDescription());
         assertEquals(expectedPrice, product.getPrice());
         assertEquals(9, product.getQuantity());
+        assertEquals("Updated Product",product.getCategory());
     }
 }

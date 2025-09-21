@@ -46,8 +46,8 @@ public class ProductControllerTest {
     @Test
     public void testGetAllProducts() throws Exception {
         // Given
-        Product product1 = new Product("Product 1", "Description 1", BigDecimal.valueOf(19.99), 100);
-        Product product2 = new Product("Product 2", "Description 2", BigDecimal.valueOf(29.99), 50);
+        Product product1 = new Product("Product 1", "Description 1", BigDecimal.valueOf(19.99), 100,"Product 1 Category");
+        Product product2 = new Product("Product 2", "Description 2", BigDecimal.valueOf(29.99), 50,"Product 2 Category");
         List<Product> products = Arrays.asList(product1, product2);
 
         // When
@@ -70,14 +70,14 @@ public class ProductControllerTest {
     @Test
     public void testAddProduct2() throws Exception {
         // Given
-        Product product = new ProductDTO("Product 3", "Description 3", BigDecimal.valueOf(39.99), 200).toProduct();
+        Product product = new ProductDTO("Product 3", "Description 3", BigDecimal.valueOf(39.99), 200,"Product 3 Category").toProduct();
 
         // When
         when(productService.save(any(ProductDTO.class))).thenReturn(product);
 
         mockMvc.perform(post("/api/v1/product")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"name\":\"Product 3\", \"description\":\"Description 3\", \"price\":39.99, \"quantity\":200}")
+                            .content("{\"name\":\"Product 3\", \"description\":\"Description 3\", \"price\":39.99, \"quantity\":200,\"category\":\"Product 3 Category\"}")
                     )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -88,6 +88,7 @@ public class ProductControllerTest {
                     .andExpect(jsonPath("$.data.price").value(39.99))
                     .andExpect(jsonPath("$.data.quantity").value(200))
                     .andExpect(jsonPath("$.data.id").value(0))  // Assuming id is 0 here
+                    .andExpect(jsonPath("$.data.category").value("Product 3 Category"))
                     .andReturn();
 
         // Verify the mock service method was called once
@@ -127,14 +128,14 @@ public class ProductControllerTest {
     @Test
     public void testUpdateProduct() throws Exception {
         // Given
-        Product product = new ProductDTO("Product 3", "Description 3", BigDecimal.valueOf(39.99), 200).toProduct();
+        Product product = new ProductDTO("Product 3", "Description 3", BigDecimal.valueOf(39.99), 200,"Product 3 Category").toProduct();
 
         // When
         when(productService.update(anyLong(),any(ProductDTO.class))).thenReturn(product);
 
         mockMvc.perform(put("/api/v1/update/{id}",0L)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"name\":\"Product 3\", \"description\":\"Description 3\", \"price\":39.99, \"quantity\":200}")
+                        .content("{\"name\":\"Product 3\", \"description\":\"Description 3\", \"price\":39.99, \"quantity\":200,\"category\":\"Product 3 Category\"}")
                     )
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))

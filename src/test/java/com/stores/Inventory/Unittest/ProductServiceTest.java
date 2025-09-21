@@ -43,7 +43,7 @@ public class ProductServiceTest {
         MockitoAnnotations.openMocks(this);
         
         // Create a Product instance to be returned by productDTO.toProduct()
-        product = new Product("car", "BMW",  new BigDecimal("10000.0"), 2);
+        product = new Product("Tata", "Tiago",  new BigDecimal("10000.0"), 2,"Vehicle");
         productList = new ArrayList<>();
         productList.add(product);
         
@@ -84,13 +84,14 @@ public class ProductServiceTest {
         when(productRepository.save(product)).thenReturn(product);
         
         // Call the save method in ProductService and pass the mocked productDTO
-        Product products = productService.save(productDTO);
+        Product product1 = productService.save(productDTO);
 
         // Verify that the repository's Save method was called
         verify(productRepository, times(1)).save(product);
         
         // Verify that the product list is not null
-        assertNotNull(products);
+        assertNotNull(product1);
+        assertEquals(product,product1);
     }
 
     @Test
@@ -120,7 +121,7 @@ public class ProductServiceTest {
     @Test
     public void updateProduct(){
         BigDecimal expectedPrice = new BigDecimal("3999999.90");
-        productDTO = new ProductDTO("BMW","M4 CS",expectedPrice,1);
+        productDTO = new ProductDTO("BMW","M4 CS",expectedPrice,1,"Car");
 
         when(productRepository.findById(0L)).thenReturn(Optional.of(product));
         when(productRepository.save(any(Product.class))).thenReturn(productDTO.toProduct());
@@ -131,6 +132,7 @@ public class ProductServiceTest {
         assertEquals("M4 CS", product.getDescription());
         assertEquals(expectedPrice, product.getPrice());
         assertEquals(1, product.getQuantity());
+        assertEquals("Car",product.getCategory());
 
     }
 

@@ -24,12 +24,12 @@ public class OrderItem {
     // Relationship to Product
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    private Long productId;
 
     // Relationship to Order
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
+    private Long orderId;
 
     public OrderItem(){
 
@@ -38,8 +38,8 @@ public class OrderItem {
     public OrderItem(int quantity, BigDecimal price, Product product, Order order) {
             this.quantity = quantity;
             this.price = price;
-            this.product = product;
-            this.order = order;
+            this.productId = product.getId();
+            this.orderId = order.getId();
         }
 
 }

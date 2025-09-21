@@ -1,5 +1,7 @@
 package com.stores.Inventory.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +15,10 @@ import java.util.Optional;
 
 @Getter
 @Setter
+@Entity
+@Table(name = "cart")
 public class Cart {
+
     private List<CartItem> items = new ArrayList<>();
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -27,7 +32,7 @@ public class Cart {
         }
 
         Optional<CartItem> existingItem = items.stream()
-                .filter(item -> Objects.equals(item.getProduct().getId(),product.getId()))
+                .filter(item -> Objects.equals(item.getProductId(),product.getId()))
                 .findFirst();
 
         if (existingItem.isPresent()) {
@@ -35,7 +40,7 @@ public class Cart {
             item.setQuantity(item.getQuantity() + quantity);
         } else {
             CartItem newItem = new CartItem();
-            newItem.setProduct(product);
+            newItem.setProductId(product.getId());
             newItem.setQuantity(quantity);
             newItem.setUnitPrice(product.getPrice()); // Snapshot
             items.add(newItem);
@@ -45,7 +50,7 @@ public class Cart {
 
     // Remove product from cart
     public void removeProduct(Product product) {
-        items.removeIf(item -> Objects.equals(item.getProduct(),product));
+        items.removeIf(item -> Objects.equals(item.getProductId(),product.getId()));
     }
 
     // Update quantity
@@ -55,7 +60,7 @@ public class Cart {
             return;
         }
         items.stream()
-                .filter(item -> Objects.equals(item.getProduct(),product))
+                .filter(item -> Objects.equals(item.getProductId(),product.getId()))
                 .findFirst()
                 .ifPresent(item -> item.setQuantity(quantity));
     }
@@ -82,8 +87,8 @@ public class Cart {
             OrderItem orderItem = new OrderItem();
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setPrice(cartItem.getUnitPrice()); // Use snapshot price
-            orderItem.setProduct(cartItem.getProduct());
-            orderItem.setOrder(order);
+            orderItem.setProductId(cartItem.getProductId());
+            orderItem.setOrderId(order.getId());
             order.getOrderItems().add(orderItem);
         }
 

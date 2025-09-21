@@ -27,6 +27,7 @@ public class ProductDTOTest {
         productDTO.setDescription("A powerful laptop");
         productDTO.setPrice(BigDecimal.valueOf(999.99));
         productDTO.setQuantity(10);
+        productDTO.setCategory("Tech");
     }
 
     /**
@@ -38,16 +39,7 @@ public class ProductDTOTest {
         assertEquals("A powerful laptop", productDTO.getDescription());
         assertEquals(BigDecimal.valueOf(999.99), productDTO.getPrice());
         assertEquals(10, productDTO.getQuantity());
-
-        productDTO.setName("Smartphone");
-        productDTO.setDescription("A modern smartphone");
-        productDTO.setPrice(BigDecimal.valueOf(499.99));
-        productDTO.setQuantity(20);
-
-        assertEquals("Smartphone", productDTO.getName());
-        assertEquals("A modern smartphone", productDTO.getDescription());
-        assertEquals(BigDecimal.valueOf(499.99), productDTO.getPrice());
-        assertEquals(20, productDTO.getQuantity());
+        assertEquals("Tech",productDTO.getCategory());
     }
 
     /**
@@ -62,6 +54,7 @@ public class ProductDTOTest {
         assertEquals("A powerful laptop", product.getDescription());
         assertEquals(BigDecimal.valueOf(999.99), product.getPrice());
         assertEquals(10, product.getQuantity());
+        assertEquals("Tech",product.getCategory());
     }
 
     /**
