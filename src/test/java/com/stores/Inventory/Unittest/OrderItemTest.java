@@ -5,25 +5,14 @@ import com.stores.Inventory.model.OrderItem;
 import com.stores.Inventory.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
-public class OrderItemTest {
+class OrderItemTest {
 
     private OrderItem orderItem;
-
-    @Mock
-    private Product product;
-
-    @Mock
-    private Order order;
 
     @BeforeEach
     void setUp() {
@@ -31,60 +20,59 @@ public class OrderItemTest {
     }
 
     @Test
+    void testNoArgsConstructor() {
+        assertNotNull(orderItem);
+        assertNull(orderItem.getId());
+        assertEquals(0, orderItem.getQuantity());
+        assertNull(orderItem.getPrice());
+        assertNull(orderItem.getProduct());
+        assertNull(orderItem.getOrder());
+    }
+
+    @Test
+    void testAllArgsConstructor() {
+        Product product = new Product();
+        Order order = new Order();
+        BigDecimal price = new BigDecimal("150.00");
+
+        OrderItem item = new OrderItem(2, price, product, order);
+
+        assertEquals(2, item.getQuantity());
+        assertEquals(price, item.getPrice());
+        assertEquals(product, item.getProduct());
+        assertEquals(order, item.getOrder());
+    }
+
+    @Test
     void testSetAndGetId() {
-        Long id = 1L;
-        orderItem.setId(id);
-        assertEquals(id, orderItem.getId(), "ID should be set and retrieved correctly");
+        orderItem.setId(10L);
+        assertEquals(10L, orderItem.getId());
     }
 
     @Test
     void testSetAndGetQuantity() {
-        int quantity = 5;
-        orderItem.setQuantity(quantity);
-        assertEquals(quantity, orderItem.getQuantity(), "Quantity should be set and retrieved correctly");
+        orderItem.setQuantity(5);
+        assertEquals(5, orderItem.getQuantity());
     }
 
     @Test
     void testSetAndGetPrice() {
-        BigDecimal price = new BigDecimal("19.99");
+        BigDecimal price = new BigDecimal("99.99");
         orderItem.setPrice(price);
-        assertEquals(price, orderItem.getPrice(), "Price should be set and retrieved correctly");
+        assertEquals(price, orderItem.getPrice());
     }
 
     @Test
     void testSetAndGetProduct() {
-        orderItem.setProductId(product.getId());
-        assertEquals(product.getId(), orderItem.getProductId(), "Product should be set and retrieved correctly");
+        Product product = new Product();
+        orderItem.setProduct(product);
+        assertEquals(product, orderItem.getProduct());
     }
 
     @Test
     void testSetAndGetOrder() {
-        orderItem.setOrderId(order.getId());
-        assertEquals(order.getId(), orderItem.getOrderId(), "Order should be set and retrieved correctly");
-    }
-
-    @Test
-    void testNullPrice() {
-        orderItem.setPrice(null);
-        assertNull(orderItem.getPrice(), "Price should be null when set to null");
-    }
-
-    @Test
-    void testNullProduct() {
-        orderItem.setProductId(null);
-        assertNull(orderItem.getProductId(), "Product should be null when set to null");
-    }
-
-    @Test
-    void testNullOrder() {
-        orderItem.setOrderId(null);
-        assertNull(orderItem.getOrderId(), "Order should be null when set to null");
-    }
-
-    @Test
-    void testSetNegativeQuantity() {
-        int negativeQuantity = -1;
-        orderItem.setQuantity(negativeQuantity);
-        assertEquals(negativeQuantity, orderItem.getQuantity(), "Negative quantity should be allowed unless validated");
+        Order order = new Order();
+        orderItem.setOrder(order);
+        assertEquals(order, orderItem.getOrder());
     }
 }

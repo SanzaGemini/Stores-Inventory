@@ -15,40 +15,46 @@ import java.util.List;
 @Table(name = "orders")
 public class Order {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
     private Long id;
-    private LocalDateTime DateTime;
+
+    // Order belongs to a User
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "total_price", precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
-    List<OrderItem> orderItems;
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status = OrderStatus.PENDING;
 
-    public BigDecimal getTotalPrice(){
-        setToTalPrice();
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems;
+
+    // --- Business logic ---
+    public BigDecimal getTotalPrice() {
+        calculateTotalPrice();
         return this.totalPrice;
     }
 
-    private void setToTalPrice() {
-        BigDecimal totalPrice = BigDecimal.ZERO;
+    private void calculateTotalPrice() {
+        BigDecimal total = BigDecimal.ZERO;
         if (orderItems != null) {
-            for (OrderItem orderItem : orderItems) {
-                if (orderItem != null && orderItem.getPrice() != null) {
-                    totalPrice = totalPrice.add(calculateOrderPrice(orderItem.getPrice(), orderItem.getQuantity()));
+            for (OrderItem item : orderItems) {
+                if (item != null && item.getPrice() != null) {
+                    total = total.add(item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
                 }
             }
         }
-        this.totalPrice = totalPrice.setScale(2, RoundingMode.CEILING);
-    }
-
-    private BigDecimal calculateOrderPrice(BigDecimal price,int quantity){
-        return price.multiply(BigDecimal.valueOf(quantity));
-    }
-
-    public void setLocalDateTime(LocalDateTime now) {
-        this.DateTime = now;
-    }
-
-    public LocalDateTime getLocalDateTime() {
-        return this.DateTime;
+        this.totalPrice = total.setScale(2, RoundingMode.CEILING);
     }
 }
+
+

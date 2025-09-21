@@ -1,13 +1,8 @@
 package com.stores.Inventory.model;
 
-import com.stores.Inventory.repository.OrderRepository;
-import com.stores.Inventory.repository.ProductRepository;
-import com.stores.Inventory.service.OrderService;
-import com.stores.Inventory.service.ProductService;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 
@@ -17,29 +12,32 @@ import java.math.BigDecimal;
 @Table(name = "order_items")
 public class OrderItem {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_item_id")
     private Long id;
+
     private int quantity;
+
+    @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal price;
+
     // Relationship to Product
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
-    private Long productId;
+    private Product product;
 
     // Relationship to Order
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
-    private Long orderId;
+    private Order order;
 
-    public OrderItem(){
-
-    }
+    public OrderItem() {}
 
     public OrderItem(int quantity, BigDecimal price, Product product, Order order) {
-            this.quantity = quantity;
-            this.price = price;
-            this.productId = product.getId();
-            this.orderId = order.getId();
-        }
-
+        this.quantity = quantity;
+        this.price = price;
+        this.product = product;
+        this.order = order;
+    }
 }

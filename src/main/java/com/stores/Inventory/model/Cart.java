@@ -1,7 +1,6 @@
 package com.stores.Inventory.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,23 +15,35 @@ import java.util.Optional;
 @Getter
 @Setter
 @Entity
-@Table(name = "cart")
+@Table(name = "carts")
 public class Cart {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cart_id")
+    private Long id;
+
+    // Link to user (one user = one active cart)
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    // Items in this cart
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // Add product to cart (or increment quantity if exists)
+    // --- Business logic ---
+
+    // Add product to cart (or increment quantity)
     public List<CartItem> addProduct(Product product, int quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
-        }
-        if (product == null || product.getPrice() == null) {
-            throw new IllegalArgumentException("Product or price cannot be null");
-        }
+        if (quantity <= 0) throw new IllegalArgumentException("Quantity must be positive");
+        if (product == null || product.getPrice() == null) throw new IllegalArgumentException("Product or price cannot be null");
 
         Optional<CartItem> existingItem = items.stream()
-                .filter(item -> Objects.equals(item.getProductId(),product.getId()))
+                .filter(item -> Objects.equals(item.getProduct(), product))
                 .findFirst();
 
         if (existingItem.isPresent()) {
@@ -40,17 +51,18 @@ public class Cart {
             item.setQuantity(item.getQuantity() + quantity);
         } else {
             CartItem newItem = new CartItem();
-            newItem.setProductId(product.getId());
+            newItem.setCart(this); // 🔑 set back-reference
+            newItem.setProduct(product);
             newItem.setQuantity(quantity);
-            newItem.setUnitPrice(product.getPrice()); // Snapshot
+            newItem.setUnitPrice(product.getPrice()); // snapshot
             items.add(newItem);
         }
         return this.items;
     }
 
-    // Remove product from cart
+    // Remove product
     public void removeProduct(Product product) {
-        items.removeIf(item -> Objects.equals(item.getProductId(),product.getId()));
+        items.removeIf(item -> Objects.equals(item.getProduct(), product));
     }
 
     // Update quantity
@@ -60,42 +72,41 @@ public class Cart {
             return;
         }
         items.stream()
-                .filter(item -> Objects.equals(item.getProductId(),product.getId()))
+                .filter(item -> Objects.equals(item.getProduct(), product))
                 .findFirst()
                 .ifPresent(item -> item.setQuantity(quantity));
     }
 
-    // Calculate total (sum of subtotals, rounded to 2 decimals)
+    // Calculate total
     public BigDecimal getTotal() {
         return items.stream()
                 .map(CartItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .setScale(2, RoundingMode.CEILING);
+                .setScale(2, RoundingMode.HALF_EVEN);
     }
 
-    // Checkout: Create Order and OrderItems from cart
-    public Order checkout() {
-        if (items.isEmpty()) {
-            throw new IllegalStateException("Cart is empty; cannot checkout");
-        }
+    // Checkout (convert cart → order)
+    public Order checkout(User user) {
+        if (items.isEmpty()) throw new IllegalStateException("Cart is empty; cannot checkout");
 
         Order order = new Order();
-        order.setLocalDateTime(LocalDateTime.now());
+        order.setUser(user);
         order.setOrderItems(new ArrayList<>());
 
         for (CartItem cartItem : items) {
             OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setProduct(cartItem.getProduct());
             orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setPrice(cartItem.getUnitPrice()); // Use snapshot price
-            orderItem.setProductId(cartItem.getProductId());
-            orderItem.setOrderId(order.getId());
+            orderItem.setPrice(cartItem.getUnitPrice()); // snapshot
             order.getOrderItems().add(orderItem);
         }
 
-        order.setTotalPrice(order.getTotalPrice()); // Triggers calculation
+        order.getTotalPrice(); // triggers calculation
         return order;
     }
 
+    // Clear cart after checkout
     public void clear() {
         items.clear();
     }

@@ -1,135 +1,136 @@
 package com.stores.Inventory.Unittest;
 
-import com.stores.Inventory.model.Cart;
-import com.stores.Inventory.model.Order;
-import com.stores.Inventory.model.Product;
+import com.stores.Inventory.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-public class  CartTest {
+class CartTest {
 
     private Cart cart;
-
-    @Mock
-    private Product product1, product2;
+    private Product product1;
+    private Product product2;
+    private User user;
 
     @BeforeEach
     void setUp() {
         cart = new Cart();
+        user = new User();
+
+        product1 = new Product("Laptop", "Gaming laptop", new BigDecimal("1200.00"), 5, "Electronics");
+        product2 = new Product("Mouse", "Wireless mouse", new BigDecimal("25.50"), 20, "Electronics");
     }
 
     @Test
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    void testAddProduct() {
-        // Arrange
-        when(product1.getId()).thenReturn(1L);
-        when(product1.getPrice()).thenReturn(new BigDecimal("10.00"));
-        when(product2.getId()).thenReturn(2L);
-        when(product2.getPrice()).thenReturn(new BigDecimal("20.00"));
-
-        // Act
+    void testAddProduct_NewItem() {
         cart.addProduct(product1, 2);
-        cart.addProduct(product2, 1);
 
-        // Assert
-        assertEquals(2, cart.getItems().size());
-        assertEquals(2, cart.getItems().get(0).getQuantity());
-        assertEquals(new BigDecimal("10.00"), cart.getItems().get(0).getUnitPrice());
-        assertEquals(new BigDecimal("40.00"), cart.getTotal());
+        assertEquals(1, cart.getItems().size());
+        CartItem item = cart.getItems().get(0);
+        assertEquals(product1, item.getProduct());
+        assertEquals(2, item.getQuantity());
+        assertEquals(new BigDecimal("1200.00"), item.getUnitPrice());
+        assertEquals(cart, item.getCart()); // back-reference
     }
 
     @Test
-    void testAddSameProductIncrementsQuantity() {
-        when(product1.getId()).thenReturn(1L);
-        when(product1.getPrice()).thenReturn(new BigDecimal("10.00"));
-
+    void testAddProduct_IncrementExistingItem() {
         cart.addProduct(product1, 2);
         cart.addProduct(product1, 3);
 
         assertEquals(1, cart.getItems().size());
         assertEquals(5, cart.getItems().get(0).getQuantity());
-        assertEquals(new BigDecimal("50.00"), cart.getTotal());
     }
 
     @Test
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    void testUpdateQuantity() {
-        when(product1.getId()).thenReturn(1L);
-        when(product1.getPrice()).thenReturn(new BigDecimal("10.00"));
-
-        cart.addProduct(product1, 2);
-        cart.updateQuantity(product1, 3);
-
-        assertEquals(3, cart.getItems().get(0).getQuantity());
-        assertEquals(new BigDecimal("30.00"), cart.getTotal());
+    void testAddProduct_InvalidQuantityThrowsException() {
+        assertThrows(IllegalArgumentException.class, () -> cart.addProduct(product1, 0));
+        assertThrows(IllegalArgumentException.class, () -> cart.addProduct(product1, -5));
     }
 
     @Test
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    void testRemoveProduct() {
-        when(product1.getId()).thenReturn(1L);
-        when(product1.getPrice()).thenReturn(new BigDecimal("10.00"));
+    void testAddProduct_NullProductThrowsException() {
+        assertThrows(IllegalArgumentException.class, () -> cart.addProduct(null, 1));
+    }
 
-        cart.addProduct(product1, 2);
+    @Test
+    void testAddProduct_NullPriceThrowsException() {
+        Product invalidProduct = new Product();
+        invalidProduct.setName("Faulty");
+        invalidProduct.setDescription("Missing price");
+        invalidProduct.setQuantity(1);
+        invalidProduct.setCategory("Misc");
+        invalidProduct.setPrice(null);
+
+        assertThrows(IllegalArgumentException.class, () -> cart.addProduct(invalidProduct, 1));
+    }
+
+    @Test
+    void testRemoveProduct_RemovesCorrectly() {
+        cart.addProduct(product1, 1);
+        cart.addProduct(product2, 1);
+
         cart.removeProduct(product1);
 
+        assertEquals(1, cart.getItems().size());
+        assertEquals(product2, cart.getItems().get(0).getProduct());
+    }
+
+    @Test
+    void testUpdateQuantity_IncreasesAndDecreasesCorrectly() {
+        cart.addProduct(product1, 2);
+        cart.updateQuantity(product1, 5);
+
+        assertEquals(5, cart.getItems().get(0).getQuantity());
+
+        cart.updateQuantity(product1, 0); // should remove product
         assertTrue(cart.getItems().isEmpty());
-        assertEquals( new BigDecimal("0.00"), cart.getTotal());
     }
 
     @Test
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    void testCheckoutCreatesOrderAndItems() {
-        // Arrange
-        when(product1.getId()).thenReturn(1L);
-        when(product1.getPrice()).thenReturn(new BigDecimal("10.555"));
-        when(product2.getId()).thenReturn(2L);
-        when(product2.getPrice()).thenReturn(new BigDecimal("5.333"));
+    void testGetTotal_CalculatesCorrectly() {
+        cart.addProduct(product1, 1); // 1200.00
+        cart.addProduct(product2, 2); // 25.50 * 2 = 51.00
 
-        cart.addProduct(product1, 2);
-        cart.addProduct(product2, 3);
+        assertEquals(new BigDecimal("1251.00"), cart.getTotal());
+    }
 
-        // Act
-        Order order = cart.checkout();
+    @Test
+    void testCheckout_ConvertsCartToOrder() {
+        cart.addProduct(product1, 1);
+        cart.addProduct(product2, 2);
 
-        // Assert
+        Order order = cart.checkout(user);
+
+        assertNotNull(order);
+        assertEquals(user, order.getUser());
         assertEquals(2, order.getOrderItems().size());
-        assertEquals(2, order.getOrderItems().get(0).getQuantity());
-        assertEquals(new BigDecimal("10.555"), order.getOrderItems().get(0).getPrice());
-        assertEquals(new BigDecimal("37.11"), order.getTotalPrice()); // As per previous calculation
-        assertNotNull(order.getLocalDateTime());
+        assertEquals(new BigDecimal("1251.00"), order.getTotalPrice());
+
+        // Each OrderItem should reference the same products and snapshot price
+        List<OrderItem> items = order.getOrderItems();
+        assertEquals(product1, items.get(0).getProduct());
+        assertEquals(new BigDecimal("1200.00"), items.get(0).getPrice());
+
+        assertEquals(product2, items.get(1).getProduct());
+        assertEquals(new BigDecimal("25.50"), items.get(1).getPrice());
     }
 
     @Test
-    void testCheckoutWithEmptyCartThrowsException() {
-        assertThrows(IllegalStateException.class, cart::checkout, "Empty cart should throw exception");
+    void testCheckout_EmptyCartThrowsException() {
+        assertThrows(IllegalStateException.class, () -> cart.checkout(user));
     }
 
     @Test
-    void testAddInvalidQuantityThrowsException() {
-        assertThrows(IllegalArgumentException.class, () -> cart.addProduct(product1, 0));
-    }
+    void testClear_EmptiesCart() {
+        cart.addProduct(product1, 1);
+        cart.addProduct(product2, 1);
 
-    @Test
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    void testClearCart() {
-        when(product1.getId()).thenReturn(1L);
-        when(product1.getPrice()).thenReturn(new BigDecimal("10.00"));
-
-        cart.addProduct(product1, 2);
         cart.clear();
-
         assertTrue(cart.getItems().isEmpty());
     }
 }

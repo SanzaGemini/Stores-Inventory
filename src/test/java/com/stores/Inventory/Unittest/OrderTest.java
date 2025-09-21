@@ -1,158 +1,106 @@
 package com.stores.Inventory.Unittest;
 
-import com.stores.Inventory.model.Order;
-import com.stores.Inventory.model.OrderItem;
+import com.stores.Inventory.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
-public class OrderTest {
+class OrderTest {
 
-    @InjectMocks
     private Order order;
-
-    @Mock
-    private OrderItem orderItem1;
-
-    @Mock
-    private OrderItem orderItem2;
 
     @BeforeEach
     void setUp() {
         order = new Order();
-        // Initialize orderItems list
-        List<OrderItem> orderItems = new ArrayList<>();
-        orderItems.add(orderItem1);
-        orderItems.add(orderItem2);
-        // Use reflection to set private orderItems field (since no setter exists)
-        try {
-            java.lang.reflect.Field field = Order.class.getDeclaredField("orderItems");
-            field.setAccessible(true);
-            field.set(order, orderItems);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Failed to set orderItems", e);
-        }
     }
 
     @Test
-    void testGetTotalPriceWithMultipleItems() {
-        // Arrange
-        when(orderItem1.getPrice()).thenReturn(new BigDecimal("10.555"));
-        when(orderItem1.getQuantity()).thenReturn(2);
-        when(orderItem2.getPrice()).thenReturn(new BigDecimal("5.333"));
-        when(orderItem2.getQuantity()).thenReturn(3);
+    void testDefaultStatusIsPending() {
+        assertEquals(OrderStatus.PENDING, order.getStatus());
+    }
 
-        // Act
-        BigDecimal totalPrice = order.getTotalPrice();
+    @Test
+    void testCreatedAtIsInitialized() {
+        assertNotNull(order.getCreatedAt());
+        assertTrue(order.getCreatedAt().isBefore(LocalDateTime.now().plusSeconds(1)));
+    }
 
-        // Assert
-        // Expected: (10.555 * 2) + (5.333 * 3) = 21.11 + 15.999 = 37.109
-        // After rounding to 2 decimal places with CEILING: 37.11
-        BigDecimal expected = new BigDecimal("37.11");
-        assertEquals(expected, totalPrice, "Total price should be 37.11 after rounding");
+    @Test
+    void testSetAndGetId() {
+        order.setId(1L);
+        assertEquals(1L, order.getId());
+    }
+
+    @Test
+    void testSetAndGetUser() {
+        User user = new User();
+        order.setUser(user);
+        assertEquals(user, order.getUser());
+    }
+
+    @Test
+    void testGetTotalPriceWithNullOrderItems() {
+        order.setOrderItems(null);
+        BigDecimal total = order.getTotalPrice();
+        assertEquals(new BigDecimal("0.00"), total);
     }
 
     @Test
     void testGetTotalPriceWithEmptyOrderItems() {
-        // Arrange
-        try {
-            java.lang.reflect.Field field = Order.class.getDeclaredField("orderItems");
-            field.setAccessible(true);
-            field.set(order, Collections.emptyList());
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Failed to set orderItems", e);
-        }
-
-        // Act
-        BigDecimal totalPrice = order.getTotalPrice();
-
-        // Assert
-        // Expected: 0.00 (empty list, rounded to 2 decimal places)
-        BigDecimal expected = new BigDecimal("0.00");
-        assertEquals(expected, totalPrice, "Total price should be 0.00 for empty order items");
+        order.setOrderItems(Collections.emptyList());
+        BigDecimal total = order.getTotalPrice();
+        assertEquals(new BigDecimal("0.00"), total);
     }
 
     @Test
-    void testGetTotalPriceWithZeroQuantity() {
-        // Arrange
-        when(orderItem1.getPrice()).thenReturn(new BigDecimal("10.555"));
-        when(orderItem1.getQuantity()).thenReturn(0);
-        when(orderItem2.getPrice()).thenReturn(new BigDecimal("5.333"));
-        when(orderItem2.getQuantity()).thenReturn(2);
+    void testGetTotalPriceWithValidItems() {
+        OrderItem item1 = new OrderItem(2, new BigDecimal("10.50"), new Product(), order);
+        OrderItem item2 = new OrderItem(3, new BigDecimal("5.25"), new Product(), order);
 
-        // Act
-        BigDecimal totalPrice = order.getTotalPrice();
+        order.setOrderItems(Arrays.asList(item1, item2));
 
-        // Assert
-        // Expected: (10.555 * 0) + (5.333 * 2) = 0 + 10.666 = 10.666
-        // After rounding to 2 decimal places with CEILING: 10.67
-        BigDecimal expected = new BigDecimal("10.67");
-        assertEquals(expected, totalPrice, "Total price should be 10.67 with zero quantity for one item");
+        BigDecimal total = order.getTotalPrice();
+        assertEquals(new BigDecimal("36.75"), total);
     }
 
     @Test
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    void testGetTotalPriceWithNullPrice() {
-        when(orderItem1.getPrice()).thenReturn(null);
-        when(orderItem1.getQuantity()).thenReturn(2);
-        when(orderItem2.getPrice()).thenReturn(new BigDecimal("5.333"));
-        when(orderItem2.getQuantity()).thenReturn(3);
+    void testGetTotalPriceSkipsNullItems() {
+        OrderItem item1 = new OrderItem(2, new BigDecimal("10.00"), new Product(), order);
 
-        BigDecimal totalPrice = order.getTotalPrice();
-        // Expected: (null * 2 skipped) + (5.333 * 3) = 15.999, rounded to 16.00
-        BigDecimal expected = new BigDecimal("16.00");
-        assertEquals(expected, totalPrice, "Total price should be 16.00, ignoring null price");
+        order.setOrderItems(Arrays.asList(item1, null));
+
+        BigDecimal total = order.getTotalPrice();
+        assertEquals(new BigDecimal("20.00"), total);
     }
 
     @Test
-    void testGetTotalPriceWithNullOrderItemsList() {
-        // Arrange
-        try {
-            java.lang.reflect.Field field = Order.class.getDeclaredField("orderItems");
-            field.setAccessible(true);
-            field.set(order, null);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Failed to set orderItems", e);
-        }
+    void testGetTotalPriceSkipsItemsWithNullPrice() {
+        OrderItem item1 = new OrderItem(2, null, new Product(), order);
+        OrderItem item2 = new OrderItem(1, new BigDecimal("15.00"), new Product(), order);
 
-        // Act
-        BigDecimal totalPrice = order.getTotalPrice();
+        order.setOrderItems(Arrays.asList(item1, item2));
 
-        // Assert
-        // Expected: 0.00 (null list treated as empty, rounded to 2 decimal places)
-        BigDecimal expected = new BigDecimal("0.00");
-        assertEquals(expected, totalPrice, "Total price should be 0.00 for null order items");
+        BigDecimal total = order.getTotalPrice();
+        assertEquals(new BigDecimal("15.00"), total);
     }
 
     @Test
-    void testGetTotalPriceWithNegativeQuantity() {
-        // Arrange
-        when(orderItem1.getPrice()).thenReturn(new BigDecimal("10.555"));
-        when(orderItem1.getQuantity()).thenReturn(-1);
-        when(orderItem2.getPrice()).thenReturn(new BigDecimal("5.333"));
-        when(orderItem2.getQuantity()).thenReturn(2);
+    void testTotalPriceIsStoredAndUpdated() {
+        OrderItem item1 = new OrderItem(1, new BigDecimal("10.00"), new Product(), order);
+        order.setOrderItems(Collections.singletonList(item1));
 
-        // Act
-        BigDecimal totalPrice = order.getTotalPrice();
+        BigDecimal firstCall = order.getTotalPrice();
+        assertEquals(new BigDecimal("10.00"), firstCall);
 
-        // Assert
-        // Expected: (10.555 * -1) + (5.333 * 2) = -10.555 + 10.666 = 0.111
-        // After rounding to 2 decimal places with CEILING: 0.12
-        BigDecimal expected = new BigDecimal("0.12");
-        assertEquals(expected, totalPrice, "Total price should be 0.12 with negative quantity");
+        // Update items and recalc
+        item1.setQuantity(3);
+        BigDecimal updatedCall = order.getTotalPrice();
+        assertEquals(new BigDecimal("30.00"), updatedCall);
     }
 }
